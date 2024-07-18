@@ -1,6 +1,8 @@
-from dash import Dash, html, page_registry, page_container
+from dash import Dash, html, page_container
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
+from src.components.header import create_header
+from src.components.footer import create_footer
 
 app = Dash(
     __name__,
@@ -10,40 +12,43 @@ app = Dash(
 
 load_figure_template('clf')
 
+header = create_header()
+footer = create_footer()
 
-app.layout = dbc.Container([
-    html.Div(
-        children=[
-            dbc.Row(
-                dbc.Col(
-                    html.H1(
-                        'CLF WBLCA Benchmarking Study v2 Dashboard',
-                        className="bg-primary text-black p-2 mb-2 text-center"
-                    ),
-                    width=11,
+
+app.layout = dbc.Container(
+    [
+        html.Div(
+            children=[
+                dbc.Row(
+                    html.Header(
+                        dbc.Row(
+                            dbc.Col(
+                                header,
+                                className='mb-2',
+                                width={'size': 10}
+                            ),
+                            justify='center'
+                        ),
+                    )
                 ),
-                justify='center'
-            ),
-            dbc.Row(
-                dbc.Col(
-                    dbc.Nav(
-                        [
-                            dbc.NavLink(page['name'],
-                                        href=page['path'],
-                                        active=True,
-                                        className='bg-primary text-black me-2 mb-2 fw-bold'
-                                        )
-                            for page in page_registry.values()
-                        ],
-                        pills=True,
-                    ),
-                    width=11
+                dbc.Row(
+                    page_container
                 ),
-                justify='center'
-            ),
-        ],
-    ),
-    page_container
+                dbc.Row(
+                    html.Footer(
+                        dbc.Row(
+                            dbc.Col(
+                                footer,
+                                className='mt-2',
+                                width={'size': 10}
+                            ),
+                            justify='center'
+                        ),
+                    )
+                )
+            ],
+        ),
     ],
     fluid=True,
     className='dbc'

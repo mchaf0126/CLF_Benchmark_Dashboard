@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 import plotly.express as px
-from dash import html, dcc, callback, Input, Output, register_page
+from dash import html, dcc, callback, Input, Output, State, register_page
 from dash.dash_table.Format import Format, Scheme
 import dash_bootstrap_components as dbc
 import src.utils.general as utils
@@ -66,7 +66,7 @@ layout = html.Div(
                             [dcc.Graph(id="stacked_bar")],
                             className='border rounded'
                         )
-                    ], xs=8, sm=8, md=9, lg=9, xl=9, xxl=9
+                    ], xs=7, sm=7, md=8, lg=8, xl=8, xxl=8
                 ),
             ],
             justify='center',
@@ -74,10 +74,12 @@ layout = html.Div(
         ),
         dbc.Row(
             dbc.Col(
-                html.Div(
+                html.Div([
+                    html.Button("Download Table Contents", id="btn-download-tbl-stack"),
+                    dcc.Download(id="download-tbl-stack"),
                     table,
-                ),
-                width={"size": 8},
+                ]),
+                width={"size": 7},
             ),
             justify='center'
         ),
@@ -147,7 +149,24 @@ def update_table(cat_value, impact_value):
         {
             'if': {'column_id': impact_cat_yaml.get(impact_value)},
             'textAlign': 'right',
-            'minWidth': '80px', 'width': '80px', 'maxWidth': '80px',
+            'minWidth': '70px', 'width': '70px', 'maxWidth': '70px',
         },
     ]
     return cols, data, style_cc
+
+
+@callback(
+    Output("download-tbl-stack", "data"),
+    State('categorical_dropdown', 'value'),
+    State('impact_type_dropdown', 'value'),
+    Input("btn-download-tbl-stack", "n_clicks"),
+    prevent_initial_call=True,
+)
+def func(cat_value, impact_value, n_clicks):
+    if n_clicks > 0:
+        column_list = [cat_value]
+        column_list.extend(impact_cat_yaml.get(impact_value))
+        return dcc.send_data_frame(
+            df[column_list].sort_values(by=cat_value).to_csv,
+            f"{cat_value} values by {impact_value}.csv",
+            index=False)
