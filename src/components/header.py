@@ -22,7 +22,7 @@ def create_header() -> html.Div:
                         dbc.Col(
                             dbc.NavbarBrand(
                                 'WBLCA Benchmark Dashboard',
-                                className='fs-3 text-white'
+                                className='fs-3 text-white fw-bolder'
                             ),
                         ),
                     ],
@@ -35,7 +35,7 @@ def create_header() -> html.Div:
                             dbc.NavLink(
                                 'Home',
                                 href='/',
-                                className='fs-5 text-white'
+                                className='fs-5 text-white fw-bolder'
                             ),
                     ),
                     dbc.DropdownMenu(
@@ -55,7 +55,7 @@ def create_header() -> html.Div:
                             )
                         ],
                         nav=True,
-                        toggleClassName='fs-5 text-white',
+                        toggleClassName='fs-5 text-white fw-bolder',
                         color='white'
                     )
                 ])

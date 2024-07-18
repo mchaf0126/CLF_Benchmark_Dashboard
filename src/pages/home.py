@@ -1,5 +1,5 @@
 from pathlib import Path
-from dash import html, register_page
+from dash import html, dcc, register_page
 import dash_bootstrap_components as dbc
 from src.components.jumbotron import create_jumbotron
 
@@ -30,47 +30,86 @@ layout = html.Div(
         dbc.Row(
             [
                 dbc.Col(
-                    html.Div(
-                        [
-                            html.H3(
-                                'Welcome to the CLF WBLCA Benchmark Study Dashboard!'
-                            ),
-                            html.Br(),
-                            html.H4(
-                                'About this study'
-                            ),
-                            html.P(
-                                'In 2017, the CLF published the Embodied Carbon Benchmark Study for North American buildings. \
-                                Since then, the practice of whole-building life cycle assessment (WBLCA) has grown rapidly in \
-                                the AEC industry, and it has become clear that more robust and reliable benchmarks are\
-                                critical for advancing work in this field. '
-                            ),
-                            html.Br(),
-                            html.H4(
-                                'Contents of the Dashboard'
-                            ),
-                            html.P(
-                                'List of Dashboard Graphs:'
-                            ),
-                            html.Ul([
-                                html.Li('Box plot'),
-                                html.Li('Scatter plot'),
-                                html.Li('Stacked bar chart')
-                            ])
-                        ]
-                    ),
-                    width={"size": 7},
+                    [
+                        dcc.Markdown(
+                            '''
+                            #### About this study
+                            '''
+                        ),
+                        dcc.Markdown(
+                            '''
+                            In 2017, the CLF published the Embodied Carbon
+                            Benchmark Study for North American buildings.
+                            Since then, the practice of whole-building life
+                            cycle assessment (WBLCA) has grown rapidly in the
+                            AEC industry, and it has become clear that more
+                            robust and reliable benchmarks are critical for
+                            advancing work in this field. This project will
+                            fill a critical gap in the AEC industry and help
+                            enable architects, engineers, policy makers, and
+                            the entire design community to work towards
+                            realistic and measurable embodied carbon reductions
+                            at the building scale.
+                            ''',
+                            className='fw-light'
+                        ),
+                        html.Br(),
+                        dcc.Markdown(
+                            '''
+                            #### About the dashboard
+                            '''
+                        ),
+                        dcc.Markdown(
+                            '''
+                            At present, the dashboard is in beta. There are
+                            currently three types of graphs available, with
+                            more to come in the future:
+                            *  **Box plot** - the traditional benchmarking graph.
+                            This plot will show evironmental impacts based on
+                            categorical variables
+                            *  **Scatter plot** - good for analyzing relationships.
+                            This plot will show evironmental impacts compared
+                            to continuous variables.
+                            *  **Stacked bar chart** - a way to compare average impacts.
+                            This chart will show the _average_ impacts of a categorical
+                            variable split across either life cycle stage or building
+                            element (as described by OmniClass).
+                            ''',
+                            className='fw-light'
+                        ),
+                        html.Br(),
+                        dcc.Markdown(
+                            '''
+                            #### Useful Links
+                            '''
+                        ),
+                        dcc.Markdown(
+                            '''
+                            - **[Study Landing Page]
+                            (https://carbonleadershipforum.org/clf-wblca-v2/)**
+                            - **[California Carbon Report]
+                            (https://carbonleadershipforum.org/california-carbon/)**
+                            - **[Data Collection User Guide]
+                            (https://hdl.handle.net/1773/51285)**
+                            - **[Data Entry Template]
+                            (https://hdl.handle.net/1773/51286)**
+                            ''',
+                            className='fw-light'
+                        ),
+                    ],
+                    width={"size": 8},
+                    class_name='pe-5'
                 ),
                 dbc.Col(
                     [
                         firm_jumbotron, project_number_jumbotron, avg_impact_jumbotron
                     ],
-                    className='my-5',
+                    className='my-4',
                     width={'size': 2}
                 ),
             ],
-            justify='evenly',
-            className='my-4'
+            justify='center',
+            className='m-2'
         ),
     ]
 )

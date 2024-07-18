@@ -79,10 +79,7 @@ layout = html.Div(
                 ),
                 dbc.Col(
                     [
-                        dbc.Card(
-                            [dcc.Graph(id="continuous_graph")],
-                            className='border rounded'
-                        )
+                        dcc.Graph(id="continuous_graph"),
                     ], xs=7, sm=7, md=8, lg=8, xl=8, xxl=8
                 ),
             ],

@@ -39,7 +39,12 @@ def create_footer() -> html.Div:
                         width={'size': 4}
                     ),
                     dbc.Col(
-                        html.Div('© Copyright 2024, Carbon Leadership Forum', className='text-end'),
+                        html.Div(
+                            html.Small(
+                                '© Copyright 2024, Carbon Leadership Forum'
+                                ), 
+                            className='text-end fw-light',
+                        ),
                         width={'size': 4}
                     )
                 ],

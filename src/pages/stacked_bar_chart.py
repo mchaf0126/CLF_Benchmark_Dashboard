@@ -62,16 +62,14 @@ layout = html.Div(
                 ),
                 dbc.Col(
                     [
-                        dbc.Card(
-                            [dcc.Graph(id="stacked_bar")],
-                            className='border rounded'
-                        )
+                        dcc.Graph(id="stacked_bar"),
                     ], xs=7, sm=7, md=8, lg=8, xl=8, xxl=8
                 ),
             ],
             justify='center',
             className='mb-4'
         ),
+        html.Hr(),
         dbc.Row(
             dbc.Col(
                 html.Div([

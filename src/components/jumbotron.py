@@ -16,16 +16,16 @@ def create_jumbotron(main_text: str, subtitle: list) -> html.Div:
     jumbotron = html.Div(
         dbc.Container(
             [
-                html.H1(main_text, className=""),
+                html.H1(main_text, className="my-2"),
                 html.P(
                     subtitle,
-                    className="lead mt-2",
+                    className="lead fs-5 my-2",
                 ),
                 html.Hr(className="mb-2"),
             ],
             fluid=True,
-            className="text-center py-2",
+            className="text-center py-1",
         ),
-        className="mb-5 p-2 bg-body-secondary rounded-3",
+        className="mb-5 p-0 bg-body-secondary rounded-3",
     )
     return jumbotron
