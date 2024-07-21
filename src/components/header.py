@@ -14,10 +14,13 @@ def create_header() -> html.Div:
                 dbc.Row(
                     [
                         dbc.Col(
-                            html.Img(
-                                src='assets/CLF_Logo_Rev_MED.png',
-                                height="70px"
-                            ),
+                            html.A(
+                                html.Img(
+                                    src='assets/CLF_Logo_Rev_MED.png',
+                                    height="70px"
+                                ),
+                                href='https://carbonleadershipforum.org'
+                            )
                         ),
                         dbc.Col(
                             dbc.NavbarBrand(

@@ -21,16 +21,19 @@ def create_footer() -> html.Div:
                             html.Div(
                                 [
                                     html.A(
-                                        'Website  |',
-                                        href='https://carbonleadershipforum.org/clf-wblca-v2/',
-                                    ),
-                                    html.A(
-                                        '  Github  |',
+                                        html.Img(src='assets/github.png', height='40px'),
                                         href='https://github.com/mchaf0126/CLF_Benchmark_Dashboard',
+                                        className='mx-2'
                                     ),
                                     html.A(
-                                        ' California Carbon Report',
-                                        href='https://carbonleadershipforum.org/california-carbon/',
+                                        html.Img(src='assets/linkedin.png', height='40px'),
+                                        href='https://www.linkedin.com/company/carbon-leadership-forum/',
+                                        className='mx-2'
+                                    ),
+                                    html.A(
+                                        html.Img(src='assets/youtube.png', height='35px'),
+                                        href='https://www.youtube.com/channel/UCPeIwsmA8ul3iazdy5M9i2w',
+                                        className='mx-2'
                                     ),
                                 ],                                
                                 className='text-center fw-bold'
