@@ -10,9 +10,9 @@ current_file_path = Path(__file__)
 main_directory = current_file_path.parents[2]
 data_directory = main_directory.joinpath('data/public_dataset_fake_07-10-2024.csv')
 
-firm_jumbotron = create_jumbotron(
-    main_text='30',
-    subtitle='Firms Contributing Data'
+typology_jumbotron = create_jumbotron(
+    main_text='17',
+    subtitle='Unique Building Typologies'
 )
 
 project_number_jumbotron = create_jumbotron(
@@ -102,7 +102,7 @@ layout = html.Div(
                 ),
                 dbc.Col(
                     [
-                        firm_jumbotron, project_number_jumbotron, avg_impact_jumbotron
+                        typology_jumbotron, project_number_jumbotron, avg_impact_jumbotron
                     ],
                     className='my-4',
                     width={'size': 2}
