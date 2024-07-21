@@ -39,7 +39,7 @@ def create_header() -> html.Div:
                             ),
                     ),
                     dbc.DropdownMenu(
-                        label='Graphs',
+                        label='Explore the data',
                         children=[
                             dbc.DropdownMenuItem(
                                 "Box plot",

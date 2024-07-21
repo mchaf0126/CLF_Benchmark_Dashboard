@@ -15,40 +15,35 @@ load_figure_template('clf')
 header = create_header()
 footer = create_footer()
 
-
 app.layout = dbc.Container(
     [
-        html.Div(
-            children=[
+        dbc.Row(
+            html.Header(
                 dbc.Row(
-                    html.Header(
-                        dbc.Row(
-                            dbc.Col(
-                                header,
-                                className='mb-2',
-                                width={'size': 10}
-                            ),
-                            justify='center'
-                        ),
-                    )
+                    dbc.Col(
+                        header,
+                        className='mb-2',
+                        width={'size': 10}
+                    ),
+                    justify='center'
                 ),
-                dbc.Row(
-                    page_container
-                ),
-                dbc.Row(
-                    html.Footer(
-                        dbc.Row(
-                            dbc.Col(
-                                footer,
-                                className='mt-2',
-                                width={'size': 10}
-                            ),
-                            justify='center'
-                        ),
-                    )
-                )
-            ],
+            )
         ),
+        dbc.Row(
+            page_container
+        ),
+        dbc.Row(
+            html.Footer(
+                dbc.Row(
+                    dbc.Col(
+                        footer,
+                        className='mt-2',
+                        width={'size': 10}
+                    ),
+                    justify='center'
+                ),
+            )
+        )
     ],
     fluid=True,
     className='dbc'
