@@ -120,12 +120,9 @@ def update_chart(category_x, objective):
     fig.update_yaxes(
         title=category_x
     )
-    # fig.update_traces(
-    #     marker=dict(
-    #         color='#FDB525'
-    #     ),
-    #     textposition='auto'
-    # )
+    fig.update_traces(
+        quartilemethod='inclusive'
+    )
     return fig
 
 
