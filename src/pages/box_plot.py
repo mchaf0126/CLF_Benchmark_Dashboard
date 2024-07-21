@@ -2,11 +2,12 @@ from pathlib import Path
 import pandas as pd
 import plotly.express as px
 from dash import html, dcc, callback, Input, Output, State, register_page
-from dash.dash_table.Format import Format, Scheme
 import dash_bootstrap_components as dbc
 import src.utils.general as utils
 from src.components.dropdowns import create_dropdown
-from src.components.datatable import create_datatable
+from src.components.datatable import create_datatable, \
+    create_float_table_entry, create_string_table_entry, \
+    create_int_table_entry
 
 register_page(__name__, path='/box_plot')
 
@@ -74,7 +75,7 @@ layout = html.Div(
                     dcc.Download(id="download-tbl-box"),
                     table,
                 ]),
-                width={"size": 3},
+                width={"size": 8},
             ),
             justify='center'
         )
@@ -132,7 +133,8 @@ def update_chart(category_x, objective):
     [
         Output('results_table_cat', 'columns'),
         Output('results_table_cat', 'data'),
-        Output('results_table_cat', 'style_cell_conditional')
+        Output('results_table_cat', 'style_cell_conditional'),
+        Output('results_table_cat', 'style_header_conditional')
     ],
     [
         Input('categorical_dropdown', 'value'),
@@ -140,27 +142,54 @@ def update_chart(category_x, objective):
     ]
 )
 def update_table(cat_value, impact_value):
-    cols = [
-        {
-            'id': cat_value,
-            'name': cat_value
-        },
-        {
-            'id': impact_value,
-            'name': impact_value,
-            'type': 'numeric',
-            'format': Format(precision=2, scheme=Scheme.fixed)
-        }
+    tbl_df = (
+        df.groupby(
+            cat_value, as_index=False
+        )[impact_value]
+        .describe()
+        .rename(
+            columns={
+                '25%': 'Q1',
+                '50%': 'median',
+                '75%': 'Q3'
+            }
+        )
+    )
+    int_columns = [
+        'count'
     ]
-    data = df[[cat_value, impact_value]].sort_values(by=cat_value).to_dict('records')
+    float_columns = [
+        'mean',
+        'std',
+        'max',
+        'min',
+        'median',
+        'Q1',
+        'Q3'
+    ]
+    number_cols = int_columns + float_columns
+
+    tbl_df_cols = [cat_value] + number_cols
+    tbl_df = tbl_df[tbl_df_cols]
+
+    cols = [create_string_table_entry(cat_value)] + \
+        [create_int_table_entry(int_col) for int_col in int_columns] + \
+        [create_float_table_entry(float_col) for float_col in float_columns]
+    data = tbl_df.to_dict('records')
     style_cc = [
         {
-            'if': {'column_id': impact_value},
+            'if': {'column_id': number_cols},
             'textAlign': 'right',
             'minWidth': '150 px', 'width': '150px', 'maxWidth': '150px',
         },
     ]
-    return cols, data, style_cc
+    style_head = [
+        {
+            'if': {'column_id': number_cols},
+            'textAlign': 'right',
+        },
+    ]
+    return cols, data, style_cc, style_head
 
 
 @callback(
@@ -172,7 +201,33 @@ def update_table(cat_value, impact_value):
 )
 def func(cat_value, impact_value, n_clicks):
     if n_clicks > 0:
+        tbl_df = (
+            df.groupby(
+                cat_value, as_index=False
+            )[impact_value]
+            .describe()
+            .rename(
+                columns={
+                    '25%': 'Q1',
+                    '50%': 'median',
+                    '75%': 'Q3'
+                }
+            )
+        )
+        tbl_df = tbl_df[
+            [
+                cat_value,
+                'count',
+                'mean',
+                'std',
+                'max',
+                'min',
+                'median',
+                'Q1',
+                'Q3'
+            ]
+        ]
         return dcc.send_data_frame(
-            df[[cat_value, impact_value]].sort_values(by=cat_value).to_csv,
+            tbl_df.to_csv,
             f"{cat_value} values by {impact_value}.csv",
             index=False)

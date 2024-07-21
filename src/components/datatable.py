@@ -1,4 +1,5 @@
 from dash import dash_table, html
+from dash.dash_table.Format import Format, Scheme
 
 
 def create_datatable(table_id: str) -> html.Div:
@@ -33,3 +34,54 @@ def create_datatable(table_id: str) -> html.Div:
         ),
         className='dbc'
     )
+
+
+def create_string_table_entry(column_name: str) -> dict:
+    """_summary_
+
+    Args:
+        column_name (str): _description_
+
+    Returns:
+        dict: _description_
+    """
+    return {
+        'id': column_name,
+        'name': column_name,
+        'type': 'numeric',
+        'format': Format(precision=2, scheme=Scheme.fixed)
+    }
+
+
+def create_float_table_entry(column_name: str) -> dict:
+    """_summary_
+
+    Args:
+        column_name (str): _description_
+
+    Returns:
+        dict: _description_
+    """
+    return {
+        'id': column_name,
+        'name': column_name,
+        'type': 'numeric',
+        'format': Format(precision=2, scheme=Scheme.fixed)
+    }
+
+
+def create_int_table_entry(column_name: str) -> dict:
+    """_summary_
+
+    Args:
+        column_name (str): _description_
+
+    Returns:
+        dict: _description_
+    """
+    return {
+        'id': column_name,
+        'name': column_name,
+        'type': 'numeric',
+        'format': Format(precision=2, scheme=Scheme.decimal_integer)
+    }

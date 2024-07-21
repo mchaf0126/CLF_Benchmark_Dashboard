@@ -6,7 +6,9 @@ from dash.dash_table.Format import Format, Scheme
 import dash_bootstrap_components as dbc
 import src.utils.general as utils
 from src.components.dropdowns import create_dropdown
-from src.components.datatable import create_datatable
+from src.components.datatable import create_datatable, \
+    create_float_table_entry, create_string_table_entry, \
+    create_int_table_entry
 
 register_page(__name__, path='/stacked_bar_chart')
 
@@ -118,7 +120,8 @@ def update_chart(cat_value, impact_type):
     [
         Output('results_table_stacked_bar', 'columns'),
         Output('results_table_stacked_bar', 'data'),
-        Output('results_table_stacked_bar', 'style_cell_conditional')
+        Output('results_table_stacked_bar', 'style_cell_conditional'),
+        Output('results_table_stacked_bar', 'style_header_conditional'),
     ],
     [
         Input('categorical_dropdown', 'value'),
@@ -126,31 +129,32 @@ def update_chart(cat_value, impact_type):
     ]
 )
 def update_table(cat_value, impact_value):
+    impact_type = impact_cat_yaml.get(impact_value)
+    count_series = df.groupby(cat_value)[cat_value].count()
+    cols = [create_string_table_entry(cat_value)] +\
+        [create_int_table_entry('count')] + \
+        [create_float_table_entry(c) for c in impact_type]
 
-    cols = [
-        {
-            'id': cat_value,
-            'name': cat_value
-        },
-    ]
-    for c in impact_cat_yaml.get(impact_value):
-        cols.append({
-                'id': c,
-                'name': c,
-                'type': 'numeric',
-                'format': Format(precision=2, scheme=Scheme.fixed)
-        })
-    column_list = [cat_value]
-    column_list.extend(impact_cat_yaml.get(impact_value))
-    data = df[column_list].sort_values(by=cat_value).to_dict('records')
+    data = (df.groupby(cat_value, as_index=False)[impact_type]
+            .mean()
+            .sort_values(by=cat_value)
+            .assign(count=count_series.values)
+            .to_dict('records')
+            )
     style_cc = [
         {
-            'if': {'column_id': impact_cat_yaml.get(impact_value)},
+            'if': {'column_id': impact_type+['count']},
             'textAlign': 'right',
             'minWidth': '70px', 'width': '70px', 'maxWidth': '70px',
         },
     ]
-    return cols, data, style_cc
+    style_head = [
+        {
+            'if': {'column_id': impact_type + ['count']},
+            'textAlign': 'right',
+        },
+    ]
+    return cols, data, style_cc, style_head
 
 
 @callback(
@@ -162,9 +166,15 @@ def update_table(cat_value, impact_value):
 )
 def func(cat_value, impact_value, n_clicks):
     if n_clicks > 0:
-        column_list = [cat_value]
-        column_list.extend(impact_cat_yaml.get(impact_value))
+        impact_type = impact_cat_yaml.get(impact_value)
+        count_series = df.groupby(cat_value)[cat_value].count()
+        download_df = (df.groupby(cat_value, as_index=False)[impact_type]
+                       .mean()
+                       .assign(count=count_series.values)
+                       .sort_values(by=cat_value)
+                       )
+        download_df = download_df[[cat_value]+['count']+impact_type]
         return dcc.send_data_frame(
-            df[column_list].sort_values(by=cat_value).to_csv,
+            download_df.to_csv,
             f"{cat_value} values by {impact_value}.csv",
             index=False)
