@@ -18,40 +18,38 @@ def create_footer() -> html.Div:
                     ),
                     dbc.Col(
                         [
-                            html.Div(
-                                [
-                                    html.A(
-                                        html.Img(src='assets/github.png', height='40px'),
-                                        href='https://github.com/mchaf0126/CLF_Benchmark_Dashboard',
-                                        className='mx-2'
-                                    ),
-                                    html.A(
-                                        html.Img(src='assets/linkedin.png', height='40px'),
-                                        href='https://www.linkedin.com/company/carbon-leadership-forum/',
-                                        className='mx-2'
-                                    ),
-                                    html.A(
-                                        html.Img(src='assets/youtube.png', height='35px'),
-                                        href='https://www.youtube.com/channel/UCPeIwsmA8ul3iazdy5M9i2w',
-                                        className='mx-2'
-                                    ),
-                                ],                                
-                                className='text-center fw-bold'
-                            )
+
+                            html.A(
+                                html.Img(src='assets/github.png', height='40px'),
+                                href='https://github.com/mchaf0126/CLF_Benchmark_Dashboard',
+                                className='mx-2'
+                            ),
+                            html.A(
+                                html.Img(src='assets/linkedin.png', height='40px'),
+                                href='https://www.linkedin.com/company/carbon-leadership-forum/',
+                                className='mx-2'
+                            ),
+                            html.A(
+                                html.Img(src='assets/youtube.png', height='35px'),
+                                href='https://www.youtube.com/channel/UCPeIwsmA8ul3iazdy5M9i2w',
+                                className='mx-2'
+                            ),
                         ],
-                        width={'size': 4}
+                        width={'size': 4},
+                        class_name='text-center'
                     ),
                     dbc.Col(
                         html.Div(
                             html.Small(
                                 '© Copyright 2024, Carbon Leadership Forum'
-                                ), 
+                            ),
                             className='text-end fw-light',
                         ),
                         width={'size': 4}
                     )
                 ],
-                justify='end'
+                justify='end',
+                align='center'
             )
         ],
         fluid=True,

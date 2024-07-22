@@ -2,7 +2,6 @@ from pathlib import Path
 import pandas as pd
 import plotly.express as px
 from dash import html, dcc, callback, Input, Output, State, register_page
-from dash.dash_table.Format import Format, Scheme
 import dash_bootstrap_components as dbc
 import src.utils.general as utils
 from src.components.dropdowns import create_dropdown
