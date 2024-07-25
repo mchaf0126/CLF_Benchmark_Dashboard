@@ -1,4 +1,5 @@
 from pathlib import Path
+import pandas as pd
 from dash import html, dcc, register_page
 import dash_bootstrap_components as dbc
 from src.components.jumbotron import create_jumbotron
@@ -10,18 +11,20 @@ current_file_path = Path(__file__)
 main_directory = current_file_path.parents[2]
 data_directory = main_directory.joinpath('data/public_dataset_fake_07-10-2024.csv')
 
+df = pd.read_csv(data_directory)
+
 typology_jumbotron = create_jumbotron(
-    main_text='17',
+    main_text=len(df['prim_bldg_use'].unique()),
     subtitle='Unique Building Typologies'
 )
 
 project_number_jumbotron = create_jumbotron(
-    main_text='275',
+    main_text=df.shape[0],
     subtitle='New Construction Projects'
 )
 
 avg_impact_jumbotron = create_jumbotron(
-    main_text='560',
+    main_text=round(df['eci_A_to_C'].mean()),
     subtitle='Average kg CO2 / m2'
 )
 
