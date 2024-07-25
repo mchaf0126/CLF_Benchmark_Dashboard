@@ -94,7 +94,7 @@ def update_chart(dimensions, impact_value):
     fig = px.parallel_coordinates(
         df,
         dimensions=dimensions,
-        color='eci_A_to_C',
+        color=impact_value,
         template='clf',
     )
     return fig
