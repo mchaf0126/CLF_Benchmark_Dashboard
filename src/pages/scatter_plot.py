@@ -54,15 +54,23 @@ color_dropdown = create_dropdown(
     dropdown_id=color_dropdown_yaml['dropdown_id']
 )
 
-log_linear_dropdown = create_dropdown(
-    label=log_linear_dropdown_yaml['label'],
-    dropdown_list=log_linear_dropdown_yaml['dropdown_list'],
-    first_item=log_linear_dropdown_yaml['first_item'],
-    dropdown_id=log_linear_dropdown_yaml['dropdown_id']
+log_linear_radio = html.Div(
+    [
+        dbc.Label(log_linear_dropdown_yaml['label']),
+        dbc.RadioItems(
+            options=[
+                {"label": "Linear", "value": 'linear'},
+                {"label": "Logarithmic", "value": 'Logarithmic'},
+            ],
+            value='linear',
+            id="log_linear_radio",
+            inputCheckedClassName="border border-primary bg-primary"
+        ),
+    ],
 )
 
 controls_cont = dbc.Card(
-    [continuous_dropdown, total_impact_dropdown, color_dropdown, log_linear_dropdown],
+    [continuous_dropdown, total_impact_dropdown, color_dropdown, log_linear_radio],
     body=True,
 )
 
@@ -106,7 +114,7 @@ layout = html.Div(
     Input('continuous_dropdown', 'value'),
     Input('total_impact_dropdown', 'value'),
     Input('color_dropdown', 'value'),
-    Input('log_linear_dropdown', 'value')
+    Input('log_linear_radio', 'value')
 )
 def update_chart(cont_x, objective, color_value, log_linear):
     log_flag = False

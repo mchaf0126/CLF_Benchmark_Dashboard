@@ -55,6 +55,10 @@ def create_header() -> html.Div:
                             dbc.DropdownMenuItem(
                                 "Stacked bar chart",
                                 href="stacked_bar_chart"
+                            ),
+                            dbc.DropdownMenuItem(
+                                "Parallel coordinates plot",
+                                href="parallel_coordinates"
                             )
                         ],
                         nav=True,

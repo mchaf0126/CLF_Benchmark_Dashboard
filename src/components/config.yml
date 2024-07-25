@@ -130,4 +130,38 @@ impact_category:
     - eci_A_to_C_int_fin
     - eci_A_to_C_unknown
 
+parallel_coord_checklist:
+  label: "Dimensions"
+  options:
+    - 
+      label: bldg_height
+      value: bldg_height
+    - 
+      label: gfa_w_park_imp
+      value: gfa_w_park_imp
+    - 
+      label: col_grid_long
+      value: col_grid_long
+    - 
+      label: occupancy
+      value: occupancy
+    - 
+      label: wind_speed
+      value: wind_speed
+    - 
+      label: gfa_park_ratio
+      value: gfa_park_ratio
+  value:
+    - bldg_height
+    - gfa_w_park_imp
+    - col_grid_long
+  id: 'parallel_coord_checklist'
+  order:
+    - bldg_height
+    - gfa_w_park_imp
+    - col_grid_long
+    - occupancy
+    - wind_speed
+    - gfa_park_ratio
+
 
