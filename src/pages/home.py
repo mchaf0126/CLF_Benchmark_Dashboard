@@ -62,7 +62,7 @@ layout = html.Div(
                         dcc.Markdown(
                             '''
                             At present, the dashboard is in beta. There are
-                            currently three types of graphs available, with
+                            currently four types of graphs available, with
                             more to come in the future:
                             *  **Box plot** - the traditional benchmarking graph.
                             This plot will show evironmental impacts based on
@@ -74,6 +74,11 @@ layout = html.Div(
                             This chart will show the _average_ impacts of a categorical
                             variable split across either life cycle stage or building
                             element (as described by OmniClass).
+                            *  **Parallel coordinates chart** - a way to compare different
+                            continuous variables and impacts. This chart will show each
+                            building's categorical values along with their impacts. This will
+                            allow the user to select different values and see how their building
+                            will compare against others.
                             ''',
                             className='fw-light'
                         ),
