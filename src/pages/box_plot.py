@@ -79,6 +79,40 @@ layout = html.Div(
 
 
 @callback(
+    Output('box_plot_table_data', 'data'),
+    [
+        Input('categorical_dropdown', 'value'),
+        Input('total_impact_dropdown', 'value'),
+        State('buildings_metadata', 'data')
+    ]
+)
+def update_box_plot_table_data(cat_value, impact_value, buildings_metadata):
+    df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+
+    # filter out projects with more than 5 projects
+    df = df.groupby(cat_value).filter(lambda x: len(x) > 4)
+
+    tbl_df = (
+        df.groupby(
+            cat_value, as_index=False
+        )[impact_value]
+        .describe()
+        .rename(
+            columns={
+                '25%': 'Q1',
+                '50%': 'median',
+                '75%': 'Q3'
+            }
+        )
+    )
+    return {
+        'box_plot_table_data': tbl_df.to_dict(),
+        'cat_value': cat_value,
+        'impact_value': impact_value
+    }
+
+
+@callback(
     Output('categorical_graph', 'figure'),
     [
         Input('categorical_dropdown', 'value'),
@@ -143,10 +177,13 @@ def update_chart(category_x, objective, buildings_metadata):
         range=[0, max_of_df+xshift]
         )
     fig.update_yaxes(
-        title=category_x
+        title=category_x,
     )
     fig.update_traces(
         quartilemethod='inclusive'
+    )
+    fig.update_layout(
+        margin={'pad': 10}
     )
     return fig
 
@@ -156,31 +193,13 @@ def update_chart(category_x, objective, buildings_metadata):
         Output('results_table_cat', 'columnDefs'),
         Output('results_table_cat', 'rowData'),
     ],
-    [
-        Input('categorical_dropdown', 'value'),
-        Input('total_impact_dropdown', 'value'),
-        State('buildings_metadata', 'data')
-    ]
+    Input('box_plot_table_data', 'data')
 )
-def update_table(cat_value, impact_value, buildings_metadata):
-    df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+def update_table(box_plot_table_data):
+    tbl_df = pd.DataFrame.from_dict(box_plot_table_data.get('box_plot_table_data'))
+    impact_value = box_plot_table_data.get('impact_value')
+    cat_value = box_plot_table_data.get('cat_value')
 
-    # filter out projects with more than 5 projects
-    df = df.groupby(cat_value).filter(lambda x: len(x) > 4)
-
-    tbl_df = (
-        df.groupby(
-            cat_value, as_index=False
-        )[impact_value]
-        .describe()
-        .rename(
-            columns={
-                '25%': 'Q1',
-                '50%': 'median',
-                '75%': 'Q3'
-            }
-        )
-    )
     float_columns = [
         'mean',
         'std',
@@ -207,46 +226,17 @@ def update_table(cat_value, impact_value, buildings_metadata):
 @callback(
     Output("download-tbl-box", "data"),
     [
-        State('categorical_dropdown', 'value'),
-        State('total_impact_dropdown', 'value'),
         Input("btn-download-tbl-box", "n_clicks"),
-        State('buildings_metadata', 'data')
+        State('box_plot_table_data', 'data')
     ],
     prevent_initial_call=True,
 )
-def func(cat_value, impact_value, n_clicks, buildings_metadata):
+def func(n_clicks, box_plot_table_data):
     if n_clicks > 0:
-        df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+        tbl_df = pd.DataFrame.from_dict(box_plot_table_data.get('box_plot_table_data'))
+        impact_value = box_plot_table_data.get('impact_value')
+        cat_value = box_plot_table_data.get('impact_value')
 
-        # filter out projects with more than 5 projects
-        df = df.groupby(cat_value).filter(lambda x: len(x) > 4)
-
-        tbl_df = (
-            df.groupby(
-                cat_value, as_index=False
-            )[impact_value]
-            .describe()
-            .rename(
-                columns={
-                    '25%': 'Q1',
-                    '50%': 'median',
-                    '75%': 'Q3'
-                }
-            )
-        )
-        tbl_df = tbl_df[
-            [
-                cat_value,
-                'count',
-                'mean',
-                'std',
-                'max',
-                'min',
-                'median',
-                'Q1',
-                'Q3'
-            ]
-        ]
         return dcc.send_data_frame(
             tbl_df.to_csv,
             f"{cat_value} values by {impact_value}.csv",
