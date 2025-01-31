@@ -4,8 +4,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 from src.components.dropdowns import create_dropdown
 from src.components.datatable import create_datatable, \
-    create_float_table_entry, create_string_table_entry, \
-    create_int_table_entry
+    create_float_table_entry, create_string_table_entry
 from src.utils.load_config import app_config
 
 

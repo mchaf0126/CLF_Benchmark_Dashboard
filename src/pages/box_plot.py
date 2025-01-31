@@ -4,8 +4,7 @@ from dash import html, dcc, callback, Input, Output, State, register_page
 import dash_bootstrap_components as dbc
 from src.components.dropdowns import create_dropdown
 from src.components.datatable import create_datatable, \
-    create_float_table_entry, create_string_table_entry, \
-    create_int_table_entry
+    create_float_table_entry, create_string_table_entry
 from src.utils.load_config import app_config
 
 config = app_config
@@ -61,11 +60,17 @@ layout = html.Div(
         dbc.Row(
             dbc.Col(
                 html.Div([
-                    html.Button("Download Table Contents", id="btn-download-tbl-box"),
+                    dbc.Button(
+                        "Download Table Contents",
+                        color='secondary',
+                        id="btn-download-tbl-box",
+                        active=True,
+                        className='my-2 fw-bold'
+                    ),
                     dcc.Download(id="download-tbl-box"),
                     table,
                 ]),
-                width={"size": 8},
+                xs=10, sm=10, md=10, lg=10, xl=8, xxl=8
             ),
             justify='center'
         )
@@ -87,6 +92,28 @@ def update_chart(category_x, objective, buildings_metadata):
     # filter out projects with more than 5 projects
     df = df.groupby(category_x).filter(lambda x: len(x) > 4)
 
+    max_of_df = df[objective].max()
+    if max_of_df <= 1:
+        xshift = 0.1
+    elif 1 < max_of_df < 25:
+        xshift = 2
+    elif 25 < max_of_df < 50:
+        xshift = 5
+    elif 50 < max_of_df < 100:
+        xshift = 10
+    elif 100 < max_of_df < 1000:
+        xshift = 25
+    elif 1000 < max_of_df < 10000:
+        xshift = 100
+    elif 10000 < max_of_df < 50000:
+        xshift = 1000
+    elif 50000 < max_of_df < 100000:
+        xshift = 5000
+    else:
+        xshift = 20000
+
+    print(max_of_df)
+
     grouped_medians = (
         df[[category_x, objective]]
         .groupby(by=category_x)
@@ -107,13 +134,13 @@ def update_chart(category_x, objective, buildings_metadata):
     )
     for s in df[category_x].unique():
         fig.add_annotation(y=str(s),
-                           x=4550,
+                           x=max_of_df+xshift,
                            text=f'n={str(len(df[df[category_x]==s][category_x]))}',
-                           xshift=50,
                            showarrow=False
                            )
     fig.update_xaxes(
-        title=objective + ' (kg CO2/m2)'
+        title=objective + ' (kg CO2/m2)',
+        range=[0, max_of_df+xshift]
         )
     fig.update_yaxes(
         title=category_x
@@ -126,10 +153,8 @@ def update_chart(category_x, objective, buildings_metadata):
 
 @callback(
     [
-        Output('results_table_cat', 'columns'),
-        Output('results_table_cat', 'data'),
-        Output('results_table_cat', 'style_cell_conditional'),
-        Output('results_table_cat', 'style_header_conditional')
+        Output('results_table_cat', 'columnDefs'),
+        Output('results_table_cat', 'rowData'),
     ],
     [
         Input('categorical_dropdown', 'value'),
@@ -156,9 +181,6 @@ def update_table(cat_value, impact_value, buildings_metadata):
             }
         )
     )
-    int_columns = [
-        'count'
-    ]
     float_columns = [
         'mean',
         'std',
@@ -168,29 +190,18 @@ def update_table(cat_value, impact_value, buildings_metadata):
         'Q1',
         'Q3'
     ]
-    number_cols = int_columns + float_columns
 
-    tbl_df_cols = [cat_value] + number_cols
-    tbl_df = tbl_df[tbl_df_cols]
+    if impact_value in ['epi_a_to_c', 'api_a_to_c', 'sfpi_a_to_c']:
+        valueformatter = {"function": "d3.format(',.2f')(params.value)"}
+    elif impact_value == 'odpi_a_to_c':
+        valueformatter = {"function": "d3.format(',.5f')(params.value)"}
+    else:
+        valueformatter = {"function": "d3.format(',.0f')(params.value)"}
 
     cols = [create_string_table_entry(cat_value)] + \
-        [create_int_table_entry(int_col) for int_col in int_columns] + \
-        [create_float_table_entry(float_col) for float_col in float_columns]
+        [create_float_table_entry(float_col, valueformatter) for float_col in float_columns]
     data = tbl_df.to_dict('records')
-    style_cc = [
-        {
-            'if': {'column_id': number_cols},
-            'textAlign': 'right',
-            'minWidth': '150 px', 'width': '150px', 'maxWidth': '150px',
-        },
-    ]
-    style_head = [
-        {
-            'if': {'column_id': number_cols},
-            'textAlign': 'right',
-        },
-    ]
-    return cols, data, style_cc, style_head
+    return cols, data
 
 
 @callback(
