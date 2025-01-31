@@ -2,31 +2,81 @@
 categorical_dropdown:
   label: Categorical Variable
   dropdown_list:
-    - site_country
-    - site_region
-    - site_state_province
-    - site_clim_zone
-    - bldg_proj_type
-    - bldg_ibc_type
-    - bldg_park_type
-    - bldg_prim_use
-    - bldg_sec_use
-    - bldg_stories_above
-    - bldg_stories_below
-    - bldg_height
-    - str_seis_site_cls
-    - str_sdc
-    - str_prim_horiz_sys
-    - str_prim_vert_sys
-    - str_lat_sys
-    - str_podium
-    - str_fdn_type
-    - str_sys_summary
-    - lca_design_phase
-    - lca_software
-    - lca_purp_of_assessment
-    - lca_phys_scope
-    - lca_ec_reductions
+    - 
+      label: Country
+      value: site_country
+    - 
+      label: Region
+      value: site_region
+    - 
+      label: State or Province
+      value: site_state_province
+    - 
+      label: Climate Zone
+      value: site_clim_zone
+    - 
+      label: Project Type
+      value: bldg_proj_type
+    - 
+      label: IBC Construction Type
+      value: bldg_ibc_type
+    - 
+      label: Attached Parking Type
+      value: bldg_park_type
+    - 
+      label: Primary Building Use Type
+      value: bldg_prim_use
+    - 
+      label: Secondary Building Use Type
+      value: bldg_sec_use
+    - 
+      label: Stories Above Grade
+      value: bldg_stories_above
+    - 
+      label: Stories Below Grade
+      value: bldg_stories_below
+    - 
+      label: Building Height
+      value: bldg_height
+    - 
+      label: Seismic Site Class
+      value: str_seis_site_cls
+    - 
+      label: Seismic Design Category
+      value: str_sdc
+    - 
+      label: Primary Horizontal Gravity System
+      value: str_prim_horiz_sys
+    - 
+      label: Primary Vertical Gravity System
+      value: str_prim_vert_sys
+    - 
+      label: Primary Lateral Force Resisting System
+      value: str_lat_sys
+    - 
+      label: Podium
+      value: str_podium
+    - 
+      label: Foundation Type
+      value: str_fdn_type
+    - 
+      label: Structural System Summary
+      value: str_sys_summary
+    - 
+      label: Design Phase
+      value: lca_design_phase
+    - 
+      label: Software
+      value: lca_software
+    - 
+      label: Purpose of Assessment
+      value: lca_purp_of_assessment
+    - 
+      label: Physical Scope Summary
+      value: lca_phys_scope
+    - 
+      label: Embodied Carbon Reductions
+      value: lca_ec_reductions
   first_item: site_state_province
   dropdown_id: categorical_dropdown
 
@@ -54,16 +104,42 @@ continuous_dropdown:
 total_impact_dropdown: 
   label: Impacts
   dropdown_list: 
-    - eci_a_to_c
-    - epi_a_to_c
-    - api_a_to_c
-    - sfpi_a_to_c
-    - odpi_a_to_c
-    - nredi_a_to_c
-    - ec_per_occupant_a_to_c
-    - ec_per_res_unit_a_to_c
+    - 
+      label: Embodied Carbon Intensity
+      value: eci_a_to_c
+    -  
+      label: Eutrophication Potential Intensity
+      value: epi_a_to_c
+    -  
+      label: Acidification Potential Intensity
+      value: api_a_to_c
+    -  
+      label: Smog Formation Potential Intensity
+      value: sfpi_a_to_c
+    -  
+      label: Ozone Depletion Potential Intensity
+      value: odpi_a_to_c
+    -  
+      label: Natural Resource Depletion Intensity
+      value: nredi_a_to_c
+    -  
+      label: Embodied Carbon per Occupant
+      value: ec_per_occupant_a_to_c
+    -  
+      label: Embodied Carbon per Residential Unit
+      value: ec_per_res_unit_a_to_c
   first_item: eci_a_to_c
   dropdown_id: total_impact_dropdown
+
+
+  
+  
+  
+  
+  
+  
+  
+  
 
 color_dropdown:
   label: Color
@@ -147,4 +223,52 @@ parallel_coord_checklist:
     - wind_speed
     - gfa_park_ratio
 
-
+field_name_map:
+  site_country: Country
+  site_region: Region
+  site_state_province: State or Province
+  site_clim_zone: Climate Zone
+  bldg_proj_type: Project Type
+  bldg_ibc_type: IBC Construction Type
+  bldg_park_type: Attached Parking Type
+  bldg_prim_use: Primary Building Use Type
+  bldg_sec_use: Secondary Building Use Type
+  bldg_stories_above: Stories Above Grade
+  bldg_stories_below: Stories Below Grade
+  bldg_height: Building Height
+  str_seis_site_cls: Seismic Site Class
+  str_sdc: Seismic Design Category
+  str_prim_horiz_sys: Primary Horizontal Gravity System
+  str_prim_vert_sys: Primary Vertical Gravity System
+  str_lat_sys: Primary Lateral Force Resisting System
+  str_podium: Podium
+  str_fdn_type: Foundation Type
+  str_sys_summary: Structural System Summary
+  lca_design_phase: Design Phase
+  lca_software: Software
+  lca_purp_of_assessment: Purpose of Assessment
+  lca_phys_scope: Physical Scope Summary
+  lca_ec_reductions: Embodied Carbon Reductions
+  eci_a_to_c: Embodied Carbon Intensity
+  epi_a_to_c: Eutrophication Potential Intensity
+  api_a_to_c: Acidification Potential Intensity
+  sfpi_a_to_c: Smog Formation Potential Intensity
+  odpi_a_to_c: Ozone Depletion Potential Intensity
+  nredi_a_to_c: Natural Resource Depletion Intensity
+  ec_per_occupant_a_to_c: Embodied Carbon per Occupant
+  ec_per_res_unit_a_to_c: Embodied Carbon per Residential Unit
+  bldg_cfa: Constructed Floor Area
+  bldg_gfa: Gross Floor Area
+  bldg_park_gfa: Parking Floor Area
+  bldg_added_gfa: Added Floor Area
+  bldg_renovated_gfa: Renovated Floor Area
+  bldg_occupants: Occupants
+  bldg_res_units: Residential Units
+  bldg_therm_env_area: Thermal Envelope Area
+  bldg_wwr: Window-to-Wall Ratio
+  bldg_rval_walls: Average R-Value of Walls
+  bldg_rval_roofs: Average R-Value of Roofs
+  str_wind_speed: Ultimate Wind Speed
+  str_grid_long: Typical Column Grid, Long Direction
+  str_grid_short: Typical Column Grid, Short Direction
+  lca_ec_reduction_percent: Embodied Carbon Reduction Percentage

@@ -4,8 +4,9 @@ from dash import html, dcc, callback, Input, Output, State, register_page
 import dash_bootstrap_components as dbc
 from src.components.dropdowns import create_dropdown
 from src.components.datatable import create_datatable, \
-    create_float_table_entry, create_string_table_entry
+    create_float_table_entry, create_string_table_entry, create_int_table_entry
 from src.utils.load_config import app_config
+from src.utils.general import create_graph_xshift
 
 config = app_config
 
@@ -16,6 +17,10 @@ assert categorical_dropdown_yaml is not None, 'The config for cat. dropdowns cou
 
 total_impact_dropdown_yaml = config.get('total_impact_dropdown')
 assert total_impact_dropdown_yaml is not None, 'The config for total impacts could not be set'
+
+field_name_map = config.get('field_name_map')
+assert field_name_map is not None, 'The config for field names could not be set'
+
 
 categorical_dropdown = create_dropdown(
     label=categorical_dropdown_yaml['label'],
@@ -45,12 +50,12 @@ layout = html.Div(
                 dbc.Col(
                     [
                         controls_cat
-                    ], xs=3, sm=3, md=2, lg=2, xl=2, xxl=2
+                    ], xs=3, sm=3, md=3, lg=3, xl=3, xxl=2
                 ),
                 dbc.Col(
                     [
                         dcc.Graph(id="categorical_graph")
-                    ], xs=7, sm=7, md=8, lg=8, xl=8, xxl=8
+                    ], xs=7, sm=7, md=7, lg=7, xl=7, xxl=8
                 ),
             ],
             justify='center',
@@ -122,31 +127,22 @@ def update_box_plot_table_data(cat_value, impact_value, buildings_metadata):
 )
 def update_chart(category_x, objective, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+    units_map = {
+        'eci_a_to_c': '(kgCO2e/m2)',
+        'epi_a_to_c': '(kgNe/m2)',
+        'api_a_to_c': '(kgSO2e/m2)',
+        'sfpi_a_to_c': '(kgO3e/m2)',
+        'odpi_a_to_c': '(CFC-11e/m2)',
+        'nredi_a_to_c': '(MJ/m2)',
+        'ec_per_occupant_a_to_c': '(kgCO2e/occupant)',
+        'ec_per_res_unit_a_to_c': '(kgCO2e/residential unit)',
+    }
 
     # filter out projects with more than 5 projects
     df = df.groupby(category_x).filter(lambda x: len(x) > 4)
 
     max_of_df = df[objective].max()
-    if max_of_df <= 1:
-        xshift = 0.1
-    elif 1 < max_of_df < 25:
-        xshift = 2
-    elif 25 < max_of_df < 50:
-        xshift = 5
-    elif 50 < max_of_df < 100:
-        xshift = 10
-    elif 100 < max_of_df < 1000:
-        xshift = 25
-    elif 1000 < max_of_df < 10000:
-        xshift = 100
-    elif 10000 < max_of_df < 50000:
-        xshift = 1000
-    elif 50000 < max_of_df < 100000:
-        xshift = 5000
-    else:
-        xshift = 20000
-
-    print(max_of_df)
+    xshift = create_graph_xshift(max_value=max_of_df)
 
     grouped_medians = (
         df[[category_x, objective]]
@@ -173,11 +169,11 @@ def update_chart(category_x, objective, buildings_metadata):
                            showarrow=False
                            )
     fig.update_xaxes(
-        title=objective + ' (kg CO2/m2)',
+        title=field_name_map.get(objective) + f' {units_map.get(objective)}',
         range=[0, max_of_df+xshift]
         )
     fig.update_yaxes(
-        title=category_x,
+        title=field_name_map.get(category_x),
     )
     fig.update_traces(
         quartilemethod='inclusive'
@@ -217,8 +213,11 @@ def update_table(box_plot_table_data):
     else:
         valueformatter = {"function": "d3.format(',.0f')(params.value)"}
 
-    cols = [create_string_table_entry(cat_value)] + \
-        [create_float_table_entry(float_col, valueformatter) for float_col in float_columns]
+    cols = (
+        [create_string_table_entry(cat_value, field_name_map.get(cat_value))]
+        + [create_int_table_entry('count')]
+        + [create_float_table_entry(float_col, valueformatter) for float_col in float_columns]
+    )
     data = tbl_df.to_dict('records')
     return cols, data
 

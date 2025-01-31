@@ -19,7 +19,7 @@ def create_datatable(table_id: str) -> dag.AgGrid:
         )
 
 
-def create_string_table_entry(column_name: str) -> dict:
+def create_string_table_entry(column_name: str, column_header_name: str) -> dict:
     """_summary_
 
     Args:
@@ -29,6 +29,7 @@ def create_string_table_entry(column_name: str) -> dict:
         dict: _description_
     """
     return {
+        'headerName': column_header_name,
         'field': column_name,
         'cellClass': 'fw-bold',
         'cellStyle': {
@@ -64,21 +65,26 @@ def create_float_table_entry(column_name: str, valueformatter: dict) -> dict:
     }
 
 
-# def create_int_table_entry(column_name: str) -> dict:
-#     """_summary_
+def create_int_table_entry(column_name: str) -> dict:
+    """_summary_
 
-#     Args:
-#         column_name (str): _description_
+    Args:
+        column_name (str): _description_
 
-#     Returns:
-#         dict: _description_
-#     """
-#     return {
-#         'id': column_name,
-#         'name': column_name,
-#         'type': 'numeric',
-#         'format': Format(precision=2, scheme=Scheme.decimal_integer)
-#     }
+    Returns:
+        dict: _description_
+    """
+    return {
+        'field': column_name,
+        'type': 'rightAligned',
+        'cellClass': 'fw-light',
+        'cellDataType': 'number',
+        'resizeable': True,
+        'valueFormatter': {"function": "d3.format(',.0f')(params.value)"},
+        'cellStyle': {
+            'textAlign': 'right',
+        },
+    }
 
 #     impact_col_width = 115
 #     table = dag.AgGrid(
