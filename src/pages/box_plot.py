@@ -1,26 +1,16 @@
-from pathlib import Path
-import pandas as pd
 import plotly.express as px
+import pandas as pd
 from dash import html, dcc, callback, Input, Output, State, register_page
 import dash_bootstrap_components as dbc
-import src.utils.general as utils
 from src.components.dropdowns import create_dropdown
 from src.components.datatable import create_datatable, \
     create_float_table_entry, create_string_table_entry, \
     create_int_table_entry
+from src.utils.load_config import app_config
+
+config = app_config
 
 register_page(__name__, path='/box_plot')
-
-current_file_path = Path(__file__)
-main_directory = current_file_path.parents[2]
-data_directory = main_directory.joinpath('data/public_dataset_fake_07-10-2024.csv')
-
-df = pd.read_csv(data_directory, index_col=False)
-
-config_path = main_directory.joinpath('src/components/config.yml')
-
-config = utils.read_yaml(config_path)
-assert config is not None, 'The config dictionary could not be set'
 
 categorical_dropdown_yaml = config.get('categorical_dropdown')
 assert categorical_dropdown_yaml is not None, 'The config for cat. dropdowns could not be set'
@@ -85,10 +75,14 @@ layout = html.Div(
 
 @callback(
     Output('categorical_graph', 'figure'),
-    Input('categorical_dropdown', 'value'),
-    Input('total_impact_dropdown', 'value')
+    [
+        Input('categorical_dropdown', 'value'),
+        Input('total_impact_dropdown', 'value'),
+        State('buildings_metadata', 'data')
+    ]
 )
-def update_chart(category_x, objective):
+def update_chart(category_x, objective, buildings_metadata):
+    df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     grouped_medians = (
         df[[category_x, objective]]
         .groupby(by=category_x)
@@ -135,10 +129,12 @@ def update_chart(category_x, objective):
     ],
     [
         Input('categorical_dropdown', 'value'),
-        Input('total_impact_dropdown', 'value')
+        Input('total_impact_dropdown', 'value'),
+        State('buildings_metadata', 'data')
     ]
 )
-def update_table(cat_value, impact_value):
+def update_table(cat_value, impact_value, buildings_metadata):
+    df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     tbl_df = (
         df.groupby(
             cat_value, as_index=False
@@ -191,13 +187,17 @@ def update_table(cat_value, impact_value):
 
 @callback(
     Output("download-tbl-box", "data"),
-    State('categorical_dropdown', 'value'),
-    State('total_impact_dropdown', 'value'),
-    Input("btn-download-tbl-box", "n_clicks"),
+    [
+        State('categorical_dropdown', 'value'),
+        State('total_impact_dropdown', 'value'),
+        Input("btn-download-tbl-box", "n_clicks"),
+        State('buildings_metadata', 'data')
+    ],
     prevent_initial_call=True,
 )
-def func(cat_value, impact_value, n_clicks):
+def func(cat_value, impact_value, n_clicks, buildings_metadata):
     if n_clicks > 0:
+        df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
         tbl_df = (
             df.groupby(
                 cat_value, as_index=False

@@ -1,26 +1,16 @@
-from pathlib import Path
-import pandas as pd
 import plotly.express as px
 from dash import html, dcc, callback, Input, Output, State, register_page
 import dash_bootstrap_components as dbc
-import src.utils.general as utils
 from src.components.dropdowns import create_dropdown
 from src.components.datatable import create_datatable, \
     create_float_table_entry, create_string_table_entry, \
     create_int_table_entry
+from src.utils.load_config import app_config
+
 
 register_page(__name__, path='/stacked_bar_chart')
 
-current_file_path = Path(__file__)
-main_directory = current_file_path.parents[2]
-data_directory = main_directory.joinpath('data/public_dataset_fake_07-10-2024.csv')
-
-df = pd.read_csv(data_directory, index_col=False)
-
-config_path = main_directory.joinpath('src/components/config.yml')
-
-config = utils.read_yaml(config_path)
-assert config is not None, 'The config dictionary could not be set'
+config = app_config
 
 categorical_dropdown_yaml = config.get('categorical_dropdown')
 assert categorical_dropdown_yaml is not None, 'The config for cat. dropdowns could not be set'

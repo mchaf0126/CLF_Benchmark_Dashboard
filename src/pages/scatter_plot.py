@@ -1,25 +1,14 @@
-from pathlib import Path
-import pandas as pd
 import plotly.express as px
 from dash import html, dcc, callback, Input, Output, State, register_page
 from dash.dash_table.Format import Format, Scheme
 import dash_bootstrap_components as dbc
-import src.utils.general as utils
 from src.components.dropdowns import create_dropdown
 from src.components.datatable import create_datatable
+from src.utils.load_config import app_config
 
 register_page(__name__, path='/scatter_plot')
 
-current_file_path = Path(__file__)
-main_directory = current_file_path.parents[2]
-data_directory = main_directory.joinpath('data/public_dataset_fake_07-10-2024.csv')
-
-df = pd.read_csv(data_directory, index_col=False)
-
-config_path = main_directory.joinpath('src/components/config.yml')
-
-config = utils.read_yaml(config_path)
-assert config is not None, 'The config dictionary could not be set'
+config = app_config
 
 continuous_dropdown_yaml = config.get('continuous_dropdown')
 assert continuous_dropdown_yaml is not None, 'The config for cont. dropdowns could not be set'
