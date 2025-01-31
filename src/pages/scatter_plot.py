@@ -2,6 +2,7 @@ import plotly.express as px
 from dash import html, dcc, callback, Input, Output, State, register_page
 from dash.dash_table.Format import Format, Scheme
 import dash_bootstrap_components as dbc
+import pandas as pd
 from src.components.dropdowns import create_dropdown
 from src.components.datatable import create_datatable
 from src.utils.load_config import app_config
@@ -100,12 +101,16 @@ layout = html.Div(
 
 @callback(
     Output('continuous_graph', 'figure'),
-    Input('continuous_dropdown', 'value'),
-    Input('total_impact_dropdown', 'value'),
-    Input('color_dropdown', 'value'),
-    Input('log_linear_radio', 'value')
+    [
+        Input('continuous_dropdown', 'value'),
+        Input('total_impact_dropdown', 'value'),
+        Input('color_dropdown', 'value'),
+        Input('log_linear_radio', 'value'),
+        State('buildings_metadata', 'data')
+    ]
 )
-def update_chart(cont_x, objective, color_value, log_linear):
+def update_chart(cont_x, objective, color_value, log_linear, buildings_metadata):
+    df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     log_flag = False
     if log_linear == 'Logarithmic':
         log_flag = True
@@ -143,10 +148,12 @@ def update_chart(cont_x, objective, color_value, log_linear):
     ],
     [
         Input('continuous_dropdown', 'value'),
-        Input('total_impact_dropdown', 'value')
+        Input('total_impact_dropdown', 'value'),
+        State('buildings_metadata', 'data')
     ]
 )
-def update_table(cont_value, impact_value):
+def update_table(cont_value, impact_value, buildings_metadata):
+    df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     cols = [
         {
             'id': cont_value,
@@ -174,13 +181,17 @@ def update_table(cont_value, impact_value):
 
 @callback(
     Output("download-tbl-scatter", "data"),
-    State('continuous_dropdown', 'value'),
-    State('total_impact_dropdown', 'value'),
-    Input("btn-download-tbl-scatter", "n_clicks"),
+    [
+        State('continuous_dropdown', 'value'),
+        State('total_impact_dropdown', 'value'),
+        Input("btn-download-tbl-scatter", "n_clicks"),
+        State('buildings_metadata', 'data')
+    ],
     prevent_initial_call=True,
 )
-def func(cont_value, impact_value, n_clicks):
+def func(cont_value, impact_value, n_clicks, buildings_metadata):
     if n_clicks > 0:
+        df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
         return dcc.send_data_frame(
             df[[cont_value, impact_value]].sort_values(by=cont_value).to_csv,
             f"{cont_value} values by {impact_value}.csv",

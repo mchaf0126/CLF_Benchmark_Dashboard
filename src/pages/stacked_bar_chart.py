@@ -1,6 +1,7 @@
 import plotly.express as px
 from dash import html, dcc, callback, Input, Output, State, register_page
 import dash_bootstrap_components as dbc
+import pandas as pd
 from src.components.dropdowns import create_dropdown
 from src.components.datatable import create_datatable, \
     create_float_table_entry, create_string_table_entry, \
@@ -78,11 +79,14 @@ layout = html.Div(
 
 @callback(
     Output('stacked_bar', 'figure'),
-    Input('categorical_dropdown', 'value'),
-    Input('impact_type_dropdown', 'value'),
+    [
+        Input('categorical_dropdown', 'value'),
+        Input('impact_type_dropdown', 'value'),
+        State('buildings_metadata', 'data')
+    ]
 )
-def update_chart(cat_value, impact_type):
-
+def update_chart(cat_value, impact_type, buildings_metadata):
+    df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     fig = px.histogram(
         df,
         x=cat_value,
@@ -114,10 +118,12 @@ def update_chart(cat_value, impact_type):
     ],
     [
         Input('categorical_dropdown', 'value'),
-        Input('impact_type_dropdown', 'value')
+        Input('impact_type_dropdown', 'value'),
+        State('buildings_metadata', 'data')
     ]
 )
-def update_table(cat_value, impact_value):
+def update_table(cat_value, impact_value, buildings_metadata):
+    df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     impact_type = impact_cat_yaml.get(impact_value)
     count_series = df.groupby(cat_value)[cat_value].count()
     cols = [create_string_table_entry(cat_value)] +\
@@ -148,13 +154,17 @@ def update_table(cat_value, impact_value):
 
 @callback(
     Output("download-tbl-stack", "data"),
-    State('categorical_dropdown', 'value'),
-    State('impact_type_dropdown', 'value'),
-    Input("btn-download-tbl-stack", "n_clicks"),
+    [
+        State('categorical_dropdown', 'value'),
+        State('impact_type_dropdown', 'value'),
+        Input("btn-download-tbl-stack", "n_clicks"),
+        State('buildings_metadata', 'data')
+    ],
     prevent_initial_call=True,
 )
-def func(cat_value, impact_value, n_clicks):
+def func(cat_value, impact_value, n_clicks, buildings_metadata):
     if n_clicks > 0:
+        df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
         impact_type = impact_cat_yaml.get(impact_value)
         count_series = df.groupby(cat_value)[cat_value].count()
         download_df = (df.groupby(cat_value, as_index=False)[impact_type]
