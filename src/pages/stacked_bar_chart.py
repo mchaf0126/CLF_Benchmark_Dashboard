@@ -16,11 +16,8 @@ config = app_config
 categorical_dropdown_yaml = config.get('categorical_dropdown')
 assert categorical_dropdown_yaml is not None, 'The config for cat. dropdowns could not be set'
 
-impact_type_dropdown_yaml = config.get('impact_type_dropdown')
-assert impact_type_dropdown_yaml is not None, 'The config for total impacts could not be set'
-
-impact_cat_yaml = config.get('impact_category')
-assert impact_cat_yaml is not None, 'The config for total impacts could not be set'
+total_impact_dropdown_yaml = config.get('total_impact_dropdown')
+assert total_impact_dropdown_yaml is not None, 'The config for total impacts could not be set'
 
 categorical_dropdown = create_dropdown(
     label=categorical_dropdown_yaml['label'],
@@ -29,15 +26,15 @@ categorical_dropdown = create_dropdown(
     dropdown_id=categorical_dropdown_yaml['dropdown_id']
 )
 
-impact_type_dropdown = create_dropdown(
-    label=impact_type_dropdown_yaml['label'],
-    dropdown_list=impact_type_dropdown_yaml['dropdown_list'],
-    first_item=impact_type_dropdown_yaml['first_item'],
-    dropdown_id=impact_type_dropdown_yaml['dropdown_id']
+total_impact_dropdown = create_dropdown(
+    label=total_impact_dropdown_yaml['label'],
+    dropdown_list=total_impact_dropdown_yaml['dropdown_list'],
+    first_item=total_impact_dropdown_yaml['first_item'],
+    dropdown_id='total_impact_dropdown_stacked'
 )
 
 controls_cont = dbc.Card(
-    [categorical_dropdown, impact_type_dropdown],
+    [categorical_dropdown, total_impact_dropdown],
     body=True,
 )
 
@@ -81,7 +78,7 @@ layout = html.Div(
     Output('stacked_bar', 'figure'),
     [
         Input('categorical_dropdown', 'value'),
-        Input('impact_type_dropdown', 'value'),
+        Input('total_impact_dropdown_stacked', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
@@ -90,7 +87,7 @@ def update_chart(cat_value, impact_type, buildings_metadata):
     fig = px.histogram(
         df,
         x=cat_value,
-        y=impact_cat_yaml.get(impact_type),
+        y=impact_type,
         histfunc='avg'
     )
     fig.update_xaxes(
@@ -118,13 +115,13 @@ def update_chart(cat_value, impact_type, buildings_metadata):
     ],
     [
         Input('categorical_dropdown', 'value'),
-        Input('impact_type_dropdown', 'value'),
+        Input('total_impact_dropdown_stacked', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
 def update_table(cat_value, impact_value, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
-    impact_type = impact_cat_yaml.get(impact_value)
+    impact_type = (impact_value)
     count_series = df.groupby(cat_value)[cat_value].count()
     cols = [create_string_table_entry(cat_value)] +\
         [create_int_table_entry('count')] + \
@@ -156,7 +153,7 @@ def update_table(cat_value, impact_value, buildings_metadata):
     Output("download-tbl-stack", "data"),
     [
         State('categorical_dropdown', 'value'),
-        State('impact_type_dropdown', 'value'),
+        State('total_impact_dropdown_stacked', 'value'),
         Input("btn-download-tbl-stack", "n_clicks"),
         State('buildings_metadata', 'data')
     ],
@@ -165,7 +162,7 @@ def update_table(cat_value, impact_value, buildings_metadata):
 def func(cat_value, impact_value, n_clicks, buildings_metadata):
     if n_clicks > 0:
         df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
-        impact_type = impact_cat_yaml.get(impact_value)
+        impact_type = (impact_value)
         count_series = df.groupby(cat_value)[cat_value].count()
         download_df = (df.groupby(cat_value, as_index=False)[impact_type]
                        .mean()

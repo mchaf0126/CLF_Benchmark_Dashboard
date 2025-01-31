@@ -83,6 +83,10 @@ layout = html.Div(
 )
 def update_chart(category_x, objective, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+
+    # filter out projects with more than 5 projects
+    df = df.groupby(category_x).filter(lambda x: len(x) > 4)
+
     grouped_medians = (
         df[[category_x, objective]]
         .groupby(by=category_x)
@@ -135,6 +139,10 @@ def update_chart(category_x, objective, buildings_metadata):
 )
 def update_table(cat_value, impact_value, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+
+    # filter out projects with more than 5 projects
+    df = df.groupby(cat_value).filter(lambda x: len(x) > 4)
+
     tbl_df = (
         df.groupby(
             cat_value, as_index=False
@@ -198,6 +206,10 @@ def update_table(cat_value, impact_value, buildings_metadata):
 def func(cat_value, impact_value, n_clicks, buildings_metadata):
     if n_clicks > 0:
         df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+
+        # filter out projects with more than 5 projects
+        df = df.groupby(cat_value).filter(lambda x: len(x) > 4)
+
         tbl_df = (
             df.groupby(
                 cat_value, as_index=False

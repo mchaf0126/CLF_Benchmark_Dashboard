@@ -16,7 +16,6 @@ categorical_dropdown:
     - bldg_height
     - str_seis_site_cls
     - str_sdc
-    - str_wind_speed
     - str_prim_horiz_sys
     - str_prim_vert_sys
     - str_lat_sys
@@ -34,22 +33,22 @@ categorical_dropdown:
 continuous_dropdown:
   label: Continuous Variable
   dropdown_list:
-    - gfa_w_park_imp
-    - gfa_prim_imp
-    - occupancy
-    - res_units
-    - bldg_height
-    - therm_env_area
-    - wwr
-    - r_value_walls
-    - r_value_roofs
-    - wind_speed
-    - col_grid_long
-    - col_grid_short
-    - ec_reduction_percent
-    - gfa_without_park_imp
-    - gfa_park_ratio
-  first_item: bldg_height
+    - bldg_cfa
+    - bldg_gfa
+    - bldg_park_gfa
+    - bldg_added_gfa
+    - bldg_renovated_gfa
+    - bldg_occupants
+    - bldg_res_units
+    - bldg_therm_env_area
+    - bldg_wwr
+    - bldg_rval_walls
+    - bldg_rval_roofs
+    - str_wind_speed
+    - str_grid_long
+    - str_grid_short
+    - lca_ec_reduction_percent
+  first_item: bldg_cfa
   dropdown_id: continuous_dropdown
 
 total_impact_dropdown: 
@@ -70,30 +69,31 @@ color_dropdown:
   label: Color
   dropdown_list:
     - No color
-    - state
-    - clim_zone
-    - ibc_type
-    - park_type
-    - prim_bldg_use
-    - sec_bldg_use
-    - seis_site_cls
-    - sdc
+    - site_country
+    - site_region
+    - site_state_province
+    - site_clim_zone
+    - bldg_proj_type
+    - bldg_ibc_type
+    - bldg_park_type
+    - bldg_prim_use
+    - bldg_sec_use
+    - bldg_stories_above
+    - bldg_stories_below
+    - bldg_height
+    - str_seis_site_cls
+    - str_sdc
     - str_prim_horiz_sys
     - str_prim_vert_sys
     - str_lat_sys
-    - podium
-    - str_sec_horiz_sys
-    - str_sec_vert_sys
-    - fdn_type
-    - design_phase
-    - purp_of_assessment
-    - ec_reductions
-    - stories_above_grade_bins
-    - stories_below_grade_bins
-    - gfa_w_park_imp_bins
-    - software_version_bins
-    - physical_scope_bins
-    - structural_material_bins
+    - str_podium
+    - str_fdn_type
+    - str_sys_summary
+    - lca_design_phase
+    - lca_software
+    - lca_purp_of_assessment
+    - lca_phys_scope
+    - lca_ec_reductions
   first_item: No color
   dropdown_id: color_dropdown
 
@@ -112,21 +112,6 @@ impact_type_dropdown:
     - OmniClass
   first_item: Life Cycle Stage
   dropdown_id: impact_type_dropdown
-
-impact_category: 
-  Life Cycle Stage:
-    - eci_A1-A3
-    - eci_A4
-    - eci_B4-B5
-    - eci_C2-C4
-    - eci_D
-  OmniClass:
-    - eci_A_to_C_substr
-    - eci_A_to_C_superstr
-    - eci_A_to_C_enc
-    - eci_A_to_C_int_con
-    - eci_A_to_C_int_fin
-    - eci_A_to_C_unknown
 
 parallel_coord_checklist:
   label: "Dimensions"
