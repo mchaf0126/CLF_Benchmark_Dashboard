@@ -12,9 +12,9 @@ app = Dash(
 )
 current_file_path = Path(__file__)
 main_directory = current_file_path.parents[1]
-data_directory = main_directory.joinpath('data/public_dataset_fake_07-10-2024.csv')
+data_directory = main_directory.joinpath('data/buildings_metadata_fake_01-30-2025.xlsx')
 
-buildings_metadata_df = pd.read_csv(data_directory, index_col=False)
+buildings_metadata_df = pd.read_excel(data_directory, index_col=False)
 
 load_figure_template('clf')
 
