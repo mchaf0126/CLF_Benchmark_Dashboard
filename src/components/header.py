@@ -52,14 +52,14 @@ def create_header() -> html.Div:
                                 "Scatter plot",
                                 href="scatter_plot"
                             ),
-                            dbc.DropdownMenuItem(
-                                "Stacked bar chart",
-                                href="stacked_bar_chart"
-                            ),
-                            dbc.DropdownMenuItem(
-                                "Parallel coordinates plot",
-                                href="parallel_coordinates"
-                            )
+                            # dbc.DropdownMenuItem(
+                            #     "Stacked bar chart",
+                            #     href="stacked_bar_chart"
+                            # ),
+                            # dbc.DropdownMenuItem(
+                            #     "Parallel coordinates plot",
+                            #     href="parallel_coordinates"
+                            # )
                         ],
                         nav=True,
                         toggleClassName='fs-5 text-white fw-bolder',

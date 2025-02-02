@@ -2,7 +2,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 
-def create_jumbotron(main_text: str, subtitle: list) -> html.Div:
+def create_jumbotron(subtitle: list, main_text_id: str) -> html.Div:
     """_summary_
 
     Args:
@@ -16,7 +16,10 @@ def create_jumbotron(main_text: str, subtitle: list) -> html.Div:
     jumbotron = html.Div(
         dbc.Container(
             [
-                html.H1(main_text, className="my-2"),
+                html.H1(
+                    className="my-2",
+                    id=main_text_id
+                ),
                 html.P(
                     subtitle,
                     className="lead fs-5 my-2",
