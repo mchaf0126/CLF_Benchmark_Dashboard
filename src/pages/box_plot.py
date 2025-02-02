@@ -148,7 +148,8 @@ def update_chart(category_x, objective, buildings_metadata):
         quartilemethod='inclusive',
     )
     fig.update_layout(
-        margin={'pad': 10}
+        margin={'pad': 10},
+        legend_title=None
     )
     return fig
 

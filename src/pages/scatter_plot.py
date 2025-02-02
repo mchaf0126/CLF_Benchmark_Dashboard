@@ -162,7 +162,8 @@ def update_chart(cont_x, objective, color_value, log_linear, buildings_metadata)
         tickformat=',.0f',
     )
     fig.update_layout(
-        margin={'pad': 10}
+        margin={'pad': 10},
+        legend_title=None
     )
     return fig
 
