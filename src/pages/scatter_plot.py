@@ -104,7 +104,8 @@ layout = html.Div(
                 ]),
                 width=4
             ),
-            justify='center'
+            justify='center',
+            className='mb-4'
         ),
     ],
 )

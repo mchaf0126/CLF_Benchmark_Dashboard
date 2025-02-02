@@ -77,7 +77,8 @@ layout = html.Div(
                 ]),
                 xs=10, sm=10, md=10, lg=10, xl=8, xxl=8
             ),
-            justify='center'
+            justify='center',
+            className='mb-4'
         )
     ],
 )
@@ -142,7 +143,7 @@ def update_chart(category_x, objective, buildings_metadata):
         title=field_name_map.get(category_x),
     )
     fig.update_traces(
-        quartilemethod='inclusive'
+        quartilemethod='inclusive',
     )
     fig.update_layout(
         margin={'pad': 10}
