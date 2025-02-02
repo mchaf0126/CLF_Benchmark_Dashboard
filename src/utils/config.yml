@@ -83,21 +83,51 @@ categorical_dropdown:
 continuous_dropdown:
   label: Continuous Variable
   dropdown_list:
-    - bldg_cfa
-    - bldg_gfa
-    - bldg_park_gfa
-    - bldg_added_gfa
-    - bldg_renovated_gfa
-    - bldg_occupants
-    - bldg_res_units
-    - bldg_therm_env_area
-    - bldg_wwr
-    - bldg_rval_walls
-    - bldg_rval_roofs
-    - str_wind_speed
-    - str_grid_long
-    - str_grid_short
-    - lca_ec_reduction_percent
+    - 
+      label: Constructed Floor Area
+      value: bldg_cfa
+    - 
+      label: Gross Floor Area
+      value: bldg_gfa
+    - 
+      label: Parking Floor Area
+      value: bldg_park_gfa
+    - 
+      label: Added Floor Area
+      value: bldg_added_gfa
+    - 
+      label: Renovated Floor Area
+      value: bldg_renovated_gfa
+    - 
+      label: Occupants
+      value: bldg_occupants
+    - 
+      label: Residential Units
+      value: bldg_res_units
+    - 
+      label: Thermal Envelope Area
+      value: bldg_therm_env_area
+    - 
+      label: Window-to-Wall Ratio
+      value: bldg_wwr
+    - 
+      label: Average R-Value of Walls
+      value: bldg_rval_walls
+    - 
+      label: Average R-Value of Roofs
+      value: bldg_rval_roofs
+    - 
+      label: Ultimate Wind Speed
+      value: str_wind_speed
+    - 
+      label: Typical Column Grid, Long Direction
+      value: str_grid_long
+    - 
+      label: Typical Column Grid, Short Direction
+      value: str_grid_short
+    - 
+      label: Embodied Carbon Reduction Percentage
+      value: lca_ec_reduction_percent
   first_item: bldg_cfa
   dropdown_id: continuous_dropdown
 
@@ -131,45 +161,86 @@ total_impact_dropdown:
   first_item: eci_a_to_c
   dropdown_id: total_impact_dropdown
 
-
-  
-  
-  
-  
-  
-  
-  
-  
-
 color_dropdown:
   label: Color
   dropdown_list:
-    - No color
-    - site_country
-    - site_region
-    - site_state_province
-    - site_clim_zone
-    - bldg_proj_type
-    - bldg_ibc_type
-    - bldg_park_type
-    - bldg_prim_use
-    - bldg_sec_use
-    - bldg_stories_above
-    - bldg_stories_below
-    - bldg_height
-    - str_seis_site_cls
-    - str_sdc
-    - str_prim_horiz_sys
-    - str_prim_vert_sys
-    - str_lat_sys
-    - str_podium
-    - str_fdn_type
-    - str_sys_summary
-    - lca_design_phase
-    - lca_software
-    - lca_purp_of_assessment
-    - lca_phys_scope
-    - lca_ec_reductions
+    - label: No color
+      value: No color
+    - 
+      label: Country
+      value: site_country
+    - 
+      label: Region
+      value: site_region
+    - 
+      label: State or Province
+      value: site_state_province
+    - 
+      label: Climate Zone
+      value: site_clim_zone
+    - 
+      label: Project Type
+      value: bldg_proj_type
+    - 
+      label: IBC Construction Type
+      value: bldg_ibc_type
+    - 
+      label: Attached Parking Type
+      value: bldg_park_type
+    - 
+      label: Primary Building Use Type
+      value: bldg_prim_use
+    - 
+      label: Secondary Building Use Type
+      value: bldg_sec_use
+    - 
+      label: Stories Above Grade
+      value: bldg_stories_above
+    - 
+      label: Stories Below Grade
+      value: bldg_stories_below
+    - 
+      label: Building Height
+      value: bldg_height
+    - 
+      label: Seismic Site Class
+      value: str_seis_site_cls
+    - 
+      label: Seismic Design Category
+      value: str_sdc
+    - 
+      label: Primary Horizontal Gravity System
+      value: str_prim_horiz_sys
+    - 
+      label: Primary Vertical Gravity System
+      value: str_prim_vert_sys
+    - 
+      label: Primary Lateral Force Resisting System
+      value: str_lat_sys
+    - 
+      label: Podium
+      value: str_podium
+    - 
+      label: Foundation Type
+      value: str_fdn_type
+    - 
+      label: Structural System Summary
+      value: str_sys_summary
+    - 
+      label: Design Phase
+      value: lca_design_phase
+    - 
+      label: Software
+      value: lca_software
+    - 
+      label: Purpose of Assessment
+      value: lca_purp_of_assessment
+    - 
+      label: Physical Scope Summary
+      value: lca_phys_scope
+    - 
+      label: Embodied Carbon Reductions
+      value: lca_ec_reductions
   first_item: No color
   dropdown_id: color_dropdown
 

@@ -1,11 +1,13 @@
+from math import log
 import plotly.express as px
 from dash import html, dcc, callback, Input, Output, State, register_page
-from dash.dash_table.Format import Format, Scheme
 import dash_bootstrap_components as dbc
 import pandas as pd
 from src.components.dropdowns import create_dropdown
-from src.components.datatable import create_datatable
+from src.components.datatable import create_datatable, create_float_table_entry, \
+    create_string_table_entry
 from src.utils.load_config import app_config
+from src.utils.general import create_graph_xshift
 
 register_page(__name__, path='/scatter_plot')
 
@@ -22,6 +24,9 @@ assert color_dropdown_yaml is not None, 'The config for cat. dropdowns could not
 
 log_linear_dropdown_yaml = config.get('log_linear_dropdown')
 assert log_linear_dropdown_yaml is not None, 'The config for log-linear could not be set'
+
+field_name_map = config.get('field_name_map')
+assert field_name_map is not None, 'The config for field names could not be set'
 
 continuous_dropdown = create_dropdown(
     label=continuous_dropdown_yaml['label'],
@@ -73,12 +78,12 @@ layout = html.Div(
                 dbc.Col(
                     [
                         controls_cont
-                    ], xs=3, sm=3, md=2, lg=2, xl=2, xxl=2
+                    ], xs=3, sm=3, md=3, lg=3, xl=3, xxl=2
                 ),
                 dbc.Col(
                     [
                         dcc.Graph(id="continuous_graph"),
-                    ], xs=7, sm=7, md=8, lg=8, xl=8, xxl=8
+                    ], xs=7, sm=7, md=7, lg=7, xl=7, xxl=8
                 ),
             ],
             justify='center',
@@ -87,11 +92,17 @@ layout = html.Div(
         dbc.Row(
             dbc.Col(
                 html.Div([
-                    html.Button("Download Table Contents", id="btn-download-tbl-scatter"),
+                    dbc.Button(
+                        "Download Table Contents",
+                        color='secondary',
+                        id="btn-download-tbl-scatter",
+                        active=True,
+                        className='my-2 fw-bold'
+                    ),
                     dcc.Download(id="download-tbl-scatter"),
                     table,
                 ]),
-                width={"size": 3},
+                width=4
             ),
             justify='center'
         ),
@@ -111,9 +122,24 @@ layout = html.Div(
 )
 def update_chart(cont_x, objective, color_value, log_linear, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+    units_map = {
+        'eci_a_to_c': '(kgCO2e/m2)',
+        'epi_a_to_c': '(kgNe/m2)',
+        'api_a_to_c': '(kgSO2e/m2)',
+        'sfpi_a_to_c': '(kgO3e/m2)',
+        'odpi_a_to_c': '(CFC-11e/m2)',
+        'nredi_a_to_c': '(MJ/m2)',
+        'ec_per_occupant_a_to_c': '(kgCO2e/occupant)',
+        'ec_per_res_unit_a_to_c': '(kgCO2e/residential unit)',
+    }
+    max_of_df = df[cont_x].max()
+    xshift = create_graph_xshift(max_value=max_of_df)
     log_flag = False
     if log_linear == 'Logarithmic':
         log_flag = True
+        max_of_df = log(max_of_df + xshift, 10)
+    else:
+        max_of_df = max_of_df + xshift
     if color_value == 'No color':
         color_value = None
 
@@ -126,57 +152,55 @@ def update_chart(cont_x, objective, color_value, log_linear, buildings_metadata)
         log_y=log_flag
     )
     fig.update_xaxes(
-        title=cont_x
+        title=f'{field_name_map.get(cont_x)} (n={df[~df[objective].isna()].shape[0]})',
+        range=[0, max_of_df]
         )
     fig.update_yaxes(
-        title=objective + ' (kg CO2/m2)'
+        title=f'{field_name_map.get(objective)} {units_map.get(objective)}'
     )
-    # fig.update_traces(
-    #     marker=dict(
-    #         color='#FDB525'
-    #     ),
-    #     textposition='auto'
-    # )
     return fig
 
 
 @callback(
     [
-        Output('results_table_cont', 'columns'),
-        Output('results_table_cont', 'data'),
-        Output('results_table_cont', 'style_cell_conditional')
+        Output('results_table_cont', 'columnDefs'),
+        Output('results_table_cont', 'rowData'),
     ],
     [
         Input('continuous_dropdown', 'value'),
         Input('total_impact_dropdown', 'value'),
+        Input('color_dropdown', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
-def update_table(cont_value, impact_value, buildings_metadata):
+def update_table(cont_value, impact_value, color_value, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
-    cols = [
-        {
-            'id': cont_value,
-            'name': cont_value,
-            'type': 'numeric',
-            'format': Format(precision=2, scheme=Scheme.fixed)
-        },
-        {
-            'id': impact_value,
-            'name': impact_value,
-            'type': 'numeric',
-            'format': Format(precision=2, scheme=Scheme.fixed)
-        }
-    ]
-    data = df[[cont_value, impact_value]].sort_values(by=cont_value).to_dict('records')
-    style_cc = [
-        {
-            'if': {'column_id': [impact_value, cont_value]},
-            'textAlign': 'right',
-            'minWidth': '150 px', 'width': '150px', 'maxWidth': '150px',
-        },
-    ]
-    return cols, data, style_cc
+    valeformatter = {"function": "d3.format(',.2f')(params.value)"}
+    if color_value == 'No color':
+        data = df[[cont_value, impact_value]].sort_values(by=cont_value).to_dict('records')
+        cols = \
+            [
+                create_float_table_entry(
+                    float_col,
+                    field_name_map.get(float_col),
+                    valeformatter
+                ) for float_col in [cont_value, impact_value]
+            ]
+    else:
+        data = df[
+            [cont_value, impact_value, color_value]
+        ].sort_values(by=color_value).to_dict('records')
+        cols = (
+            [create_string_table_entry(color_value, field_name_map.get(color_value))]
+            + [
+                create_float_table_entry(
+                    float_col,
+                    field_name_map.get(float_col),
+                    valeformatter
+                ) for float_col in [cont_value, impact_value]
+              ]
+        )
+    return cols, data
 
 
 @callback(
@@ -185,14 +209,21 @@ def update_table(cont_value, impact_value, buildings_metadata):
         State('continuous_dropdown', 'value'),
         State('total_impact_dropdown', 'value'),
         Input("btn-download-tbl-scatter", "n_clicks"),
-        State('buildings_metadata', 'data')
+        State('buildings_metadata', 'data'),
+        State('color_dropdown', 'value'),
     ],
     prevent_initial_call=True,
 )
-def func(cont_value, impact_value, n_clicks, buildings_metadata):
+def func(cont_value, impact_value, n_clicks, buildings_metadata, color_value):
     if n_clicks > 0:
         df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
-        return dcc.send_data_frame(
-            df[[cont_value, impact_value]].sort_values(by=cont_value).to_csv,
-            f"{cont_value} values by {impact_value}.csv",
-            index=False)
+        if color_value == "No Color":
+            return dcc.send_data_frame(
+                df[[cont_value, impact_value]].sort_values(by=cont_value).to_csv,
+                f"{cont_value} values by {impact_value}.csv",
+                index=False)
+        else:
+            return dcc.send_data_frame(
+                df[[color_value, cont_value, impact_value]].sort_values(by=color_value).to_csv,
+                f"{cont_value} values by {impact_value} sorted by {color_value}.csv",
+                index=False)

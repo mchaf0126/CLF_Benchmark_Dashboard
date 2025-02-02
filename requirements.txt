@@ -2,12 +2,8 @@
 -e .
 
 # external requirements
-click
-flake8
-python-dotenv>=0.5.1
 pandas
 pyyaml
-ipykernel
 dash
 plotly
 dash_bootstrap_components

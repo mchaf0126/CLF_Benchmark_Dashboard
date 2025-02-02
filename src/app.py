@@ -29,10 +29,6 @@ app.layout = dbc.Container(
             id='buildings_metadata',
             storage_type='memory',
         ),
-        dcc.Store(
-            id='box_plot_table_data',
-            storage_type='memory',
-        ),
         dbc.Row(
             html.Header(
                 dbc.Row(

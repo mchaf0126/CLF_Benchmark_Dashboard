@@ -9,7 +9,11 @@ def create_datatable(table_id: str) -> dag.AgGrid:
     """
     return dag.AgGrid(
             id=table_id,
-            dashGridOptions={"domLayout": "autoHeight"},
+            dashGridOptions={
+                "domLayout": "autoHeight",
+                'pagination': True,
+                "paginationPageSize": 20
+            },
             columnSize='responsiveSizeToFit',
             columnSizeOptions={
                 'defaultMinWidth': 90,
@@ -43,7 +47,9 @@ def create_string_table_entry(column_name: str, column_header_name: str) -> dict
     }
 
 
-def create_float_table_entry(column_name: str, valueformatter: dict) -> dict:
+def create_float_table_entry(column_name: str,
+                             column_header_name: str,
+                             valueformatter: dict) -> dict:
     """_summary_
 
     Args:
@@ -53,6 +59,7 @@ def create_float_table_entry(column_name: str, valueformatter: dict) -> dict:
         dict: _description_
     """
     return {
+        'headerName': column_header_name,
         'field': column_name,
         'type': 'rightAligned',
         'cellClass': 'fw-light',
