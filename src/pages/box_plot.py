@@ -137,10 +137,12 @@ def update_chart(category_x, objective, buildings_metadata):
                            )
     fig.update_xaxes(
         title=field_name_map.get(objective) + f' {units_map.get(objective)}',
-        range=[0, max_of_df+xshift]
+        range=[0, max_of_df+xshift],
+        tickformat=',.0f',
         )
     fig.update_yaxes(
         title=field_name_map.get(category_x),
+        tickformat=',.0f',
     )
     fig.update_traces(
         quartilemethod='inclusive',

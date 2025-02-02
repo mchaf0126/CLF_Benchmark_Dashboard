@@ -154,10 +154,15 @@ def update_chart(cont_x, objective, color_value, log_linear, buildings_metadata)
     )
     fig.update_xaxes(
         title=f'{field_name_map.get(cont_x)} (n={df[~df[objective].isna()].shape[0]})',
-        range=[0, max_of_df]
+        range=[0, max_of_df],
+        tickformat=',.0f',
         )
     fig.update_yaxes(
-        title=f'{field_name_map.get(objective)} {units_map.get(objective)}'
+        title=f'{field_name_map.get(objective)} {units_map.get(objective)}',
+        tickformat=',.0f',
+    )
+    fig.update_layout(
+        margin={'pad': 10}
     )
     return fig
 
