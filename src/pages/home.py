@@ -125,12 +125,12 @@ def update_chart(buildings_metadata):
     return typology_jumbotron_main_text, project_number_jumbotron_main_text, \
         avg_impact_jumbotron_main_text
 
-                            # *  **Stacked bar chart** - a way to compare average impacts.
-                            # This chart will show the _average_ impacts of a categorical
-                            # variable split across either life cycle stage or building
-                            # element (as described by OmniClass).
-                            # *  **Parallel coordinates chart** - a way to compare different
-                            # continuous variables and impacts. This chart will show each
-                            # building's categorical values along with their impacts. This will
-                            # allow the user to select different values and see how their building
-                            # will compare against others.
+# *  **Stacked bar chart** - a way to compare average impacts.
+# This chart will show the _average_ impacts of a categorical
+# variable split across either life cycle stage or building
+# element (as described by OmniClass).
+# *  **Parallel coordinates chart** - a way to compare different
+# continuous variables and impacts. This chart will show each
+# building's categorical values along with their impacts. This will
+# allow the user to select different values and see how their building
+# will compare against others.
