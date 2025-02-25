@@ -149,7 +149,6 @@ def update_chart(category_x, objective, buildings_metadata):
     )
     fig.update_layout(
         margin={'pad': 10},
-        legend_title=None
     )
     return fig
 
