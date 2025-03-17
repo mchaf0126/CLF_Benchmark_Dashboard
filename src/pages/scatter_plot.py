@@ -124,12 +124,12 @@ layout = html.Div(
 def update_chart(cont_x, objective, color_value, log_linear, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     units_map = {
-        'eci_a_to_c': '(kgCO2e/m2)',
-        'epi_a_to_c': '(kgNe/m2)',
-        'api_a_to_c': '(kgSO2e/m2)',
-        'sfpi_a_to_c': '(kgO3e/m2)',
-        'odpi_a_to_c': '(CFC-11e/m2)',
-        'nredi_a_to_c': '(MJ/m2)',
+        'eci_a_to_c_gfa': '(kgCO2e/m2)',
+        'epi_a_to_c_gfa': '(kgNe/m2)',
+        'api_a_to_c_gfa': '(kgSO2e/m2)',
+        'sfpi_a_to_c_gfa': '(kgO3e/m2)',
+        'odpi_a_to_c_gfa': '(CFC-11e/m2)',
+        'nredi_a_to_c_gfa': '(MJ/m2)',
         'ec_per_occupant_a_to_c': '(kgCO2e/occupant)',
         'ec_per_res_unit_a_to_c': '(kgCO2e/residential unit)',
     }
