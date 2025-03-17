@@ -10,6 +10,7 @@ app = Dash(
     use_pages=True,
     suppress_callback_exceptions=True,
 )
+server = app.server
 current_file_path = Path(__file__)
 main_directory = current_file_path.parents[1]
 data_directory = main_directory.joinpath('data/buildings_metadata_fake_01-30-2025.xlsx')
