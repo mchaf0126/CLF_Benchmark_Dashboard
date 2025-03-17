@@ -127,7 +127,9 @@ def update_chart(category_x, objective, buildings_metadata):
         x=objective,
         category_orders={
             category_x: order_by_median
-        }
+        },
+        color_discrete_sequence=["#FFB71B"]
+            
     )
     for s in df[category_x].unique():
         fig.add_annotation(y=str(s),
