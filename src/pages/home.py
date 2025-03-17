@@ -120,7 +120,7 @@ def update_chart(buildings_metadata):
 
     typology_jumbotron_main_text = len(df['bldg_prim_use'].unique())
     project_number_jumbotron_main_text = df.shape[0]
-    avg_impact_jumbotron_main_text = round(df['eci_a_to_c'].mean())
+    avg_impact_jumbotron_main_text = round(df['eci_a_to_c_gfa'].mean())
 
     return typology_jumbotron_main_text, project_number_jumbotron_main_text, \
         avg_impact_jumbotron_main_text
