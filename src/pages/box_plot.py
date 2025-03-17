@@ -105,9 +105,6 @@ def update_chart(category_x, objective, buildings_metadata):
         'ec_per_res_unit_a_to_c': '(kgCO2e/residential unit)',
     }
 
-    # filter out projects with more than 5 projects
-    df = df.groupby(category_x).filter(lambda x: len(x) > 4)
-
     max_of_df = df[objective].max()
     xshift = create_graph_xshift(max_value=max_of_df)
 
@@ -129,7 +126,7 @@ def update_chart(category_x, objective, buildings_metadata):
             category_x: order_by_median
         },
         color_discrete_sequence=["#FFB71B"]
-            
+
     )
     for s in df[category_x].unique():
         fig.add_annotation(y=str(s),
@@ -168,9 +165,6 @@ def update_chart(category_x, objective, buildings_metadata):
 )
 def update_table(cat_value, impact_value, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
-
-    # filter out projects with more than 5 projects
-    df = df.groupby(cat_value).filter(lambda x: len(x) > 4)
 
     tbl_df = (
         df.groupby(
@@ -229,8 +223,6 @@ def update_table(cat_value, impact_value, buildings_metadata):
 def func(n_clicks, cat_value, impact_value, buildings_metadata):
     if n_clicks > 0:
         df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
-        # filter out projects with more than 5 projects
-        df = df.groupby(cat_value).filter(lambda x: len(x) > 4)
 
         tbl_df = (
             df.groupby(
