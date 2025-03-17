@@ -196,9 +196,9 @@ def update_table(cat_value, impact_value, buildings_metadata):
         'Q3'
     ]
 
-    if impact_value in ['epi_a_to_c', 'api_a_to_c', 'sfpi_a_to_c']:
+    if impact_value in ['epi_a_to_c_gfa', 'api_a_to_c_gfa', 'sfpi_a_to_c_gfa']:
         valueformatter = {"function": "d3.format(',.2f')(params.value)"}
-    elif impact_value == 'odpi_a_to_c':
+    elif impact_value == 'odpi_a_to_c_gfa':
         valueformatter = {"function": "d3.format(',.5f')(params.value)"}
     else:
         valueformatter = {"function": "d3.format(',.0f')(params.value)"}
