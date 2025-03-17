@@ -278,12 +278,12 @@ field_name_map:
   lca_purp_of_assessment: Purpose of Assessment
   lca_phys_scope: Physical Scope Summary
   lca_ec_reductions: Embodied Carbon Reductions
-  eci_a_to_c: Embodied Carbon Intensity
-  epi_a_to_c: Eutrophication Potential Intensity
-  api_a_to_c: Acidification Potential Intensity
-  sfpi_a_to_c: Smog Formation Potential Intensity
-  odpi_a_to_c: Ozone Depletion Potential Intensity
-  nredi_a_to_c: Natural Resource Depletion Intensity
+  eci_a_to_c_gfa: Embodied Carbon Intensity
+  epi_a_to_c_gfa: Eutrophication Potential Intensity
+  api_a_to_c_gfa: Acidification Potential Intensity
+  sfpi_a_to_c_gfa: Smog Formation Potential Intensity
+  odpi_a_to_c_gfa: Ozone Depletion Potential Intensity
+  nredi_a_to_c_gfa: Natural Resource Depletion Intensity
   ec_per_occupant_a_to_c: Embodied Carbon per Occupant
   ec_per_res_unit_a_to_c: Embodied Carbon per Residential Unit
   bldg_cfa: Constructed Floor Area
