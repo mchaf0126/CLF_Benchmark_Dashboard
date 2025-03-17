@@ -8,4 +8,5 @@ dash
 plotly
 dash_bootstrap_components
 dash_bootstrap_templates
+dash_ag_grid
 gunicorn
