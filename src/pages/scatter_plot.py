@@ -150,7 +150,17 @@ def update_chart(cont_x, objective, color_value, log_linear, buildings_metadata)
         y=objective,
         color=color_value,
         log_x=log_flag,
-        log_y=log_flag
+        log_y=log_flag,
+        color_discrete_sequence=[
+            "#FFB71B",
+            "#8DC6E8",
+            "#AA182C",
+            "#0075A9",
+            "#E47E3D",
+            "#4A9462",
+            "#414042",
+            "#31006F"
+        ]
     )
     fig.update_xaxes(
         title=f'{field_name_map.get(cont_x)} (n={df[~df[objective].isna()].shape[0]})',
