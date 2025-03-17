@@ -167,6 +167,7 @@ def update_chart(category_x, objective, buildings_metadata):
 )
 def update_table(cat_value, impact_value, buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+    df[cat_value] = df[cat_value].fillna('NULL')
 
     tbl_df = (
         df.groupby(
@@ -179,7 +180,16 @@ def update_table(cat_value, impact_value, buildings_metadata):
                 '50%': 'median',
                 '75%': 'Q3'
             }
+        ).drop(
+            columns='count'
         )
+    )
+    tbl_df = pd.merge(
+        left=tbl_df,
+        right=df[cat_value].value_counts(),
+        how='left',
+        left_on=cat_value,
+        right_on=cat_value
     )
 
     float_columns = [
