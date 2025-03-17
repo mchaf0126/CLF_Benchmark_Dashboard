@@ -136,22 +136,22 @@ total_impact_dropdown:
   dropdown_list: 
     - 
       label: Embodied Carbon Intensity
-      value: eci_a_to_c
+      value: eci_a_to_c_gfa
     -  
       label: Eutrophication Potential Intensity
-      value: epi_a_to_c
+      value: epi_a_to_c_gfa
     -  
       label: Acidification Potential Intensity
-      value: api_a_to_c
+      value: api_a_to_c_gfa
     -  
       label: Smog Formation Potential Intensity
-      value: sfpi_a_to_c
+      value: sfpi_a_to_c_gfa
     -  
       label: Ozone Depletion Potential Intensity
-      value: odpi_a_to_c
+      value: odpi_a_to_c_gfa
     -  
       label: Natural Resource Depletion Intensity
-      value: nredi_a_to_c
+      value: nredi_a_to_c_gfa
     -  
       label: Embodied Carbon per Occupant
       value: ec_per_occupant_a_to_c
@@ -251,48 +251,6 @@ log_linear_dropdown:
     - Logarithmic
   first_item: Linear
   dropdown_id: log_linear_dropdown
-
-impact_type_dropdown:
-  label: "Impact by:"
-  dropdown_list:
-    - Life Cycle Stage
-    - OmniClass
-  first_item: Life Cycle Stage
-  dropdown_id: impact_type_dropdown
-
-parallel_coord_checklist:
-  label: "Dimensions"
-  options:
-    - 
-      label: bldg_height
-      value: bldg_height
-    - 
-      label: gfa_w_park_imp
-      value: gfa_w_park_imp
-    - 
-      label: col_grid_long
-      value: col_grid_long
-    - 
-      label: occupancy
-      value: occupancy
-    - 
-      label: wind_speed
-      value: wind_speed
-    - 
-      label: gfa_park_ratio
-      value: gfa_park_ratio
-  value:
-    - bldg_height
-    - gfa_w_park_imp
-    - col_grid_long
-  id: 'parallel_coord_checklist'
-  order:
-    - bldg_height
-    - gfa_w_park_imp
-    - col_grid_long
-    - occupancy
-    - wind_speed
-    - gfa_park_ratio
 
 field_name_map:
   site_country: Country
