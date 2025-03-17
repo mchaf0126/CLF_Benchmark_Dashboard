@@ -129,11 +129,13 @@ def update_chart(category_x, objective, buildings_metadata):
 
     )
     for s in df[category_x].unique():
-        fig.add_annotation(y=str(s),
-                           x=max_of_df+xshift,
-                           text=f'n={str(len(df[df[category_x]==s][category_x]))}',
-                           showarrow=False
-                           )
+        if len(df[df[category_x] == s]) > 0:
+            fig.add_annotation(
+                y=str(s),
+                x=max_of_df+xshift,
+                text=f'n={str(len(df[df[category_x]==s][category_x]))}',
+                showarrow=False
+            )
     fig.update_xaxes(
         title=field_name_map.get(objective) + f' {units_map.get(objective)}',
         range=[0, max_of_df+xshift],
