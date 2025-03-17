@@ -13,7 +13,7 @@ app = Dash(
 server = app.server
 current_file_path = Path(__file__)
 main_directory = current_file_path.parents[1]
-data_directory = main_directory.joinpath('data/buildings_metadata_fake_01-30-2025.xlsx')
+data_directory = main_directory.joinpath('data/buildings_metadata.xlsx')
 
 buildings_metadata_df = pd.read_excel(data_directory, index_col=False)
 
