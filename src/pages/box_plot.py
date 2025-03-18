@@ -50,12 +50,12 @@ layout = html.Div(
                 dbc.Col(
                     [
                         controls_cat
-                    ], xs=3, sm=3, md=3, lg=3, xl=3, xxl=2
+                    ], xs=4, sm=4, md=4, lg=4, xl=3, xxl=3,
                 ),
                 dbc.Col(
                     [
                         dcc.Graph(id="categorical_graph")
-                    ], xs=7, sm=7, md=7, lg=7, xl=7, xxl=8
+                    ], xs=8, sm=8, md=8, lg=8, xl=7, xxl=7,
                 ),
             ],
             justify='center',
@@ -67,7 +67,7 @@ layout = html.Div(
                 html.Div([
                     dbc.Button(
                         "Download Table Contents",
-                        color='secondary',
+                        color='primary',
                         id="btn-download-tbl-box",
                         active=True,
                         className='my-2 fw-bold'
@@ -75,7 +75,7 @@ layout = html.Div(
                     dcc.Download(id="download-tbl-box"),
                     table,
                 ]),
-                xs=10, sm=10, md=10, lg=10, xl=8, xxl=8
+                xs=12, sm=12, md=12, lg=12, xl=8, xxl=8,
             ),
             justify='center',
             className='mb-4'
@@ -125,7 +125,7 @@ def update_chart(category_x, objective, buildings_metadata):
         category_orders={
             category_x: order_by_median
         },
-        color_discrete_sequence=["#FFB71B"]
+        color_discrete_sequence=["#ffc700"]
 
     )
     for s in df[category_x].unique():

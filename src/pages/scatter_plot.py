@@ -78,23 +78,24 @@ layout = html.Div(
                 dbc.Col(
                     [
                         controls_cont
-                    ], xs=3, sm=3, md=3, lg=3, xl=3, xxl=2
+                    ], xs=4, sm=4, md=4, lg=4, xl=3, xxl=3,
                 ),
                 dbc.Col(
                     [
                         dcc.Graph(id="continuous_graph"),
-                    ], xs=7, sm=7, md=7, lg=7, xl=7, xxl=8
+                    ], xs=8, sm=8, md=8, lg=8, xl=7, xxl=7,
                 ),
             ],
             justify='center',
             className='mb-4'
         ),
+        html.Hr(),
         dbc.Row(
             dbc.Col(
                 html.Div([
                     dbc.Button(
                         "Download Table Contents",
-                        color='secondary',
+                        color='primary',
                         id="btn-download-tbl-scatter",
                         active=True,
                         className='my-2 fw-bold'
@@ -102,7 +103,7 @@ layout = html.Div(
                     dcc.Download(id="download-tbl-scatter"),
                     table,
                 ]),
-                width=4
+                xs=12, sm=12, md=8, lg=8, xl=8, xxl=8,
             ),
             justify='center',
             className='mb-4'
@@ -152,14 +153,15 @@ def update_chart(cont_x, objective, color_value, log_linear, buildings_metadata)
         log_x=log_flag,
         log_y=log_flag,
         color_discrete_sequence=[
-            "#FFB71B",
-            "#8DC6E8",
-            "#AA182C",
-            "#0075A9",
-            "#E47E3D",
-            "#4A9462",
-            "#414042",
-            "#31006F"
+            "#32006e",
+            "#e8e3d3",
+            "#aadb1e",
+            "#ffc700",
+            "#2ad2c9",
+            "#85754d",
+            "#e93cac",
+            "#4b2e83",
+            '#c5b4e3'
         ]
     )
     fig.update_xaxes(

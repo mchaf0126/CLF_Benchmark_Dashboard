@@ -89,7 +89,7 @@ layout = html.Div(
                             className='fw-light'
                         ),
                     ],
-                    width={"size": 8},
+                    xs=9, sm=9, md=9, lg=9, xl=8, xxl=8,
                     class_name='pe-5'
                 ),
                 dbc.Col(
@@ -97,7 +97,7 @@ layout = html.Div(
                         typology_jumbotron, project_number_jumbotron, avg_impact_jumbotron
                     ],
                     className='my-4',
-                    width={'size': 2}
+                    xs=3, sm=3, md=3, lg=3, xl=2, xxl=2,
                 ),
             ],
             justify='center',

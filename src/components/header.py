@@ -8,67 +8,68 @@ def create_header() -> html.Div:
     Returns:
         html.Div: _description_
     """
-    navbar = dbc.Navbar(
-        dbc.Container(
-            [
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.A(
-                                html.Img(
-                                    src='assets/CLF_Logo_Rev_MED.png',
-                                    height="70px"
-                                ),
-                                href='https://carbonleadershipforum.org'
-                            )
-                        ),
-                        dbc.Col(
-                            dbc.NavbarBrand(
-                                'WBLCA Benchmark Dashboard',
-                                className='fs-3 text-white fw-bolder'
+    navbar = dbc.Container(
+        [
+            dbc.Row(
+                [
+                    dbc.Col(
+                        html.A(
+                            html.Img(
+                                src='assets/W-Logo_Purple_RGB.png',
+                                height="70px",
                             ),
+                            href='https://lifecyclelab.org'
                         ),
-                    ],
-                    align='center',
-                    justify='left',
-                    className='g-4'
-                ),
-                dbc.Nav([
-                    dbc.NavItem(
-                            dbc.NavLink(
-                                'Home',
-                                href='/',
-                                className='fs-5 text-white fw-bolder'
-                            ),
+                        width=3,
+                        align='center'
                     ),
-                    dbc.DropdownMenu(
-                        label='Explore the data',
-                        children=[
-                            dbc.DropdownMenuItem(
-                                "Box plot",
-                                href="box_plot"
-                            ),
-                            dbc.DropdownMenuItem(
-                                "Scatter plot",
-                                href="scatter_plot"
-                            ),
-                            # dbc.DropdownMenuItem(
-                            #     "Stacked bar chart",
-                            #     href="stacked_bar_chart"
-                            # ),
-                            # dbc.DropdownMenuItem(
-                            #     "Parallel coordinates plot",
-                            #     href="parallel_coordinates"
-                            # )
-                        ],
-                        nav=True,
-                        toggleClassName='fs-5 text-white fw-bolder',
-                        color='white'
+                    dbc.Col(
+                        dbc.NavbarBrand(
+                            'WBLCA Benchmark Study v2 Dashboard',
+                            className='fs-3 text-white fw-bolder text-wrap'
+                        ),
+                        width=6,
+                        class_name='text-center',
+                        align='center'
+                    ),
+                    dbc.Col(
+                        dbc.Nav(
+                            [
+                                dbc.NavItem(
+                                        dbc.NavLink(
+                                            'Home',
+                                            href='/',
+                                            className='fs-5 text-white fw-bolder'
+                                        ),
+                                ),
+                                dbc.DropdownMenu(
+                                    label='Explore the data',
+                                    children=[
+                                        dbc.DropdownMenuItem(
+                                            "Box plot",
+                                            href="box_plot"
+                                        ),
+                                        dbc.DropdownMenuItem(
+                                            "Scatter plot",
+                                            href="scatter_plot"
+                                        ),
+                                    ],
+                                    nav=True,
+                                    toggleClassName='fs-5 text-white fw-bolder',
+                                    color='white',
+                                )
+                            ],
+                            horizontal='end'
+                        ),
+                        align='center',
+                        width=3
                     )
-                ])
-            ],
-            fluid=True
-        ),
-        color='secondary',
-    ),
+                ],
+                class_name='p-2'
+            ),
+        ],
+        fluid=True,
+        class_name='bg-primary justify-content-between',
+    )
+
     return navbar

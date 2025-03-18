@@ -9,6 +9,7 @@ app = Dash(
     __name__,
     use_pages=True,
     suppress_callback_exceptions=True,
+    external_stylesheets=[dbc.themes.PULSE]
 )
 server = app.server
 current_file_path = Path(__file__)
@@ -17,7 +18,7 @@ data_directory = main_directory.joinpath('data/buildings_metadata.xlsx')
 
 buildings_metadata_df = pd.read_excel(data_directory, index_col=False)
 
-load_figure_template('clf')
+load_figure_template('pulse')
 
 header = create_header()
 
@@ -36,7 +37,7 @@ app.layout = dbc.Container(
                     dbc.Col(
                         header,
                         className='mb-2',
-                        width={'size': 10}
+                        xs=12, sm=12, md=12, lg=12, xl=10, xxl=10
                     ),
                     justify='center'
                 ),
