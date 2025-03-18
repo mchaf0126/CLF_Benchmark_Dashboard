@@ -3,6 +3,8 @@ import pandas as pd
 from dash import html, dcc, callback, Input, Output, State, register_page
 import dash_bootstrap_components as dbc
 from src.components.dropdowns import create_dropdown
+from src.components.toggle import create_toggle
+from src.components.radio_items import create_radio_items
 from src.components.datatable import create_datatable, \
     create_float_table_entry, create_string_table_entry, create_int_table_entry
 from src.utils.load_config import app_config
@@ -18,9 +20,23 @@ assert categorical_dropdown_yaml is not None, 'The config for cat. dropdowns cou
 total_impact_dropdown_yaml = config.get('total_impact_dropdown')
 assert total_impact_dropdown_yaml is not None, 'The config for total impacts could not be set'
 
+new_constr_toggle_yaml = config.get('new_constr_toggle_cat')
+assert new_constr_toggle_yaml is not None, 'The config for new construction could not be set'
+
+floor_area_radio_yaml = config.get('floor_area_normalization_cat')
+assert floor_area_radio_yaml is not None, 'The config for floor area norm. could not be set'
+
+sort_box_radio_yaml = config.get('sort_box_plot_cat')
+assert sort_box_radio_yaml is not None, 'The config for box plot sorting could not be set'
+
 field_name_map = config.get('field_name_map')
 assert field_name_map is not None, 'The config for field names could not be set'
 
+category_order_map = config.get('category_order_map')
+assert category_order_map is not None, 'The config for category orders could not be set'
+
+cfa_gfa_map = config.get('cfa_gfa_map')
+assert cfa_gfa_map is not None, 'The config for cfa/gfa map could not be set'
 
 categorical_dropdown = create_dropdown(
     label=categorical_dropdown_yaml['label'],
@@ -36,8 +52,34 @@ total_impact_dropdown = create_dropdown(
     dropdown_id=total_impact_dropdown_yaml['dropdown_id']
 )
 
+new_constr_toggle = create_toggle(
+    toggle_list=new_constr_toggle_yaml['toggle_list'],
+    first_item=new_constr_toggle_yaml['first_item'],
+    toggle_id=new_constr_toggle_yaml['toggle_id'],
+)
+
+floor_area_radio = create_radio_items(
+    label=floor_area_radio_yaml['label'],
+    radio_list=floor_area_radio_yaml['radio_list'],
+    first_item=floor_area_radio_yaml['first_item'],
+    radio_id=floor_area_radio_yaml['radio_id']
+)
+
+sort_box_radio = create_radio_items(
+    label=sort_box_radio_yaml['label'],
+    radio_list=sort_box_radio_yaml['radio_list'],
+    first_item=sort_box_radio_yaml['first_item'],
+    radio_id=sort_box_radio_yaml['radio_id']
+)
+
 controls_cat = dbc.Card(
-    [categorical_dropdown, total_impact_dropdown],
+    [
+        categorical_dropdown,
+        total_impact_dropdown,
+        floor_area_radio,
+        sort_box_radio,
+        new_constr_toggle
+    ],
     body=True,
 )
 
@@ -89,41 +131,57 @@ layout = html.Div(
     [
         Input('categorical_dropdown', 'value'),
         Input('total_impact_dropdown', 'value'),
+        Input('sort_box_plot_cat', 'value'),
+        Input('floor_area_normal_cat', 'value'),
+        Input('new_constr_toggle_cat', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
-def update_chart(category_x, objective, buildings_metadata):
+def update_chart(category_x,
+                 objective,
+                 sort_type,
+                 cfa_gfa_type,
+                 new_constr_toggle_cat,
+                 buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+    if new_constr_toggle_cat == [1]:
+        df = df[df['bldg_proj_type'] == 'New Construction']
     units_map = {
-        'eci_a_to_c_gfa': '(kgCO2e/m2)',
-        'epi_a_to_c_gfa': '(kgNe/m2)',
-        'api_a_to_c_gfa': '(kgSO2e/m2)',
-        'sfpi_a_to_c_gfa': '(kgO3e/m2)',
-        'odpi_a_to_c_gfa': '(CFC-11e/m2)',
-        'nredi_a_to_c_gfa': '(MJ/m2)',
-        'ec_per_occupant_a_to_c': '(kgCO2e/occupant)',
-        'ec_per_res_unit_a_to_c': '(kgCO2e/residential unit)',
+        'eci': '(kgCO2e/m2)',
+        'epi': '(kgNe/m2)',
+        'api': '(kgSO2e/m2)',
+        'sfpi': '(kgO3e/m2)',
+        'odpi': '(CFC-11e/m2)',
+        'nredi': '(MJ/m2)',
+        'ec_per_occupant': '(kgCO2e/occupant)',
+        'ec_per_res_unit': '(kgCO2e/residential unit)',
     }
+    cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
+    objective_for_graph = cfa_gfa_mapping.get(objective)
 
-    max_of_df = df[objective].max()
+    if sort_type == 'median':
+        grouped_medians = (
+            df[[category_x, objective_for_graph]]
+            .groupby(by=category_x)
+            .median()
+            .sort_values(
+                by=objective_for_graph,
+                ascending=False
+            )
+        )
+        category_order = grouped_medians.index.to_list()
+    else:
+        category_order = category_order_map.get(category_x)
+
+    max_of_df = df[objective_for_graph].max()
     xshift = create_graph_xshift(max_value=max_of_df)
 
-    grouped_medians = (
-        df[[category_x, objective]]
-        .groupby(by=category_x)
-        .median()
-        .sort_values(
-            by=objective,
-            ascending=False
-        )
-    )
-    order_by_median = grouped_medians.index.to_list()
     fig = px.box(
         df,
         y=category_x,
-        x=objective,
+        x=objective_for_graph,
         category_orders={
-            category_x: order_by_median
+            category_x: category_order
         },
         color_discrete_sequence=["#ffc700"]
 
@@ -137,7 +195,7 @@ def update_chart(category_x, objective, buildings_metadata):
                 showarrow=False
             )
     fig.update_xaxes(
-        title=field_name_map.get(objective) + f' {units_map.get(objective)}',
+        title=field_name_map.get(objective_for_graph) + f' {units_map.get(objective)}',
         range=[0, max_of_df+xshift],
         tickformat=',.0f',
         )
@@ -162,17 +220,28 @@ def update_chart(category_x, objective, buildings_metadata):
     [
         Input('categorical_dropdown', 'value'),
         Input('total_impact_dropdown', 'value'),
+        Input('floor_area_normal_cat', 'value'),
+        Input('new_constr_toggle_cat', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
-def update_table(cat_value, impact_value, buildings_metadata):
+def update_table(cat_value,
+                 impact_value,
+                 cfa_gfa_type,
+                 new_constr_toggle_cat,
+                 buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     df[cat_value] = df[cat_value].fillna('NULL')
+    if new_constr_toggle_cat == [1]:
+        df = df[df['bldg_proj_type'] == 'New Construction']
+
+    cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
+    impact_value_for_graph = cfa_gfa_mapping.get(impact_value)
 
     tbl_df = (
         df.groupby(
             cat_value, as_index=False
-        )[impact_value]
+        )[impact_value_for_graph]
         .describe()
         .rename(
             columns={
@@ -202,9 +271,9 @@ def update_table(cat_value, impact_value, buildings_metadata):
         'Q3'
     ]
 
-    if impact_value in ['epi_a_to_c_gfa', 'api_a_to_c_gfa', 'sfpi_a_to_c_gfa']:
+    if impact_value in ['epi', 'api', 'sfpi']:
         valueformatter = {"function": "d3.format(',.2f')(params.value)"}
-    elif impact_value == 'odpi_a_to_c_gfa':
+    elif impact_value == 'odpi':
         valueformatter = {"function": "d3.format(',.5f')(params.value)"}
     else:
         valueformatter = {"function": "d3.format(',.0f')(params.value)"}
@@ -226,20 +295,33 @@ def update_table(cat_value, impact_value, buildings_metadata):
     Output("download-tbl-box", "data"),
     [
         Input("btn-download-tbl-box", "n_clicks"),
+        State('floor_area_normal_cat', 'value'),
         State('categorical_dropdown', 'value'),
         State('total_impact_dropdown', 'value'),
+        State('new_constr_toggle_cat', 'value'),
         State('buildings_metadata', 'data')
     ],
     prevent_initial_call=True,
 )
-def func(n_clicks, cat_value, impact_value, buildings_metadata):
+def func(n_clicks,
+         cfa_gfa_type,
+         cat_value,
+         impact_value,
+         new_constr_toggle_cat,
+         buildings_metadata):
     if n_clicks > 0:
         df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+        df[cat_value] = df[cat_value].fillna('NULL')
+        if new_constr_toggle_cat == [1]:
+            df = df[df['bldg_proj_type'] == 'New Construction']
+
+        cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
+        impact_value_for_graph = cfa_gfa_mapping.get(impact_value)
 
         tbl_df = (
             df.groupby(
                 cat_value, as_index=False
-            )[impact_value]
+            )[impact_value_for_graph]
             .describe()
             .rename(
                 columns={
@@ -247,9 +329,20 @@ def func(n_clicks, cat_value, impact_value, buildings_metadata):
                     '50%': 'median',
                     '75%': 'Q3'
                 }
+            ).drop(
+                columns='count'
             )
         )
+        tbl_df = pd.merge(
+            left=tbl_df,
+            right=df[cat_value].value_counts(),
+            how='left',
+            left_on=cat_value,
+            right_on=cat_value
+        )
+
         return dcc.send_data_frame(
             tbl_df.to_csv,
-            f"{cat_value} values by {impact_value}.csv",
-            index=False)
+            f"{cat_value} values by {impact_value_for_graph}.csv",
+            index=False
+        )

@@ -136,30 +136,76 @@ total_impact_dropdown:
   dropdown_list: 
     - 
       label: Embodied Carbon Intensity
-      value: eci_a_to_c_gfa
+      value: eci
     -  
       label: Eutrophication Potential Intensity
-      value: epi_a_to_c_gfa
+      value: epi
     -  
       label: Acidification Potential Intensity
-      value: api_a_to_c_gfa
+      value: api
     -  
       label: Smog Formation Potential Intensity
-      value: sfpi_a_to_c_gfa
+      value: sfpi
     -  
       label: Ozone Depletion Potential Intensity
-      value: odpi_a_to_c_gfa
+      value: odpi
     -  
       label: Natural Resource Depletion Intensity
-      value: nredi_a_to_c_gfa
+      value: nredi
     -  
       label: Embodied Carbon per Occupant
-      value: ec_per_occupant_a_to_c
+      value: ec_per_occupant
     -  
       label: Embodied Carbon per Residential Unit
-      value: ec_per_res_unit_a_to_c
-  first_item: eci_a_to_c
+      value: ec_per_res_unit
+  first_item: eci
   dropdown_id: total_impact_dropdown
+
+new_constr_toggle_cat:
+  label: ""
+  toggle_list:
+    - label: New construction only
+      value: 1
+  first_item: []
+  toggle_id: new_constr_toggle_cat
+
+new_constr_toggle_cont:
+  label: ""
+  toggle_list:
+    - label: New construction only
+      value: 1
+  first_item: []
+  toggle_id: new_constr_toggle_cont
+
+floor_area_normalization_cat:
+  label: "Normalize intensity by:"
+  radio_list:
+    - label: Constructed Floor Area
+      value: cfa
+    - label: Gross Internal Floor Area
+      value: gfa
+  first_item: cfa
+  radio_id: floor_area_normal_cat
+
+floor_area_normalization_cont:
+  label: "Normalize intensity by:"
+  radio_list:
+    - label: Constructed Floor Area
+      value: cfa
+    - label: Gross Internal Floor Area
+      value: gfa
+  first_item: cfa
+  radio_id: floor_area_normal_cont
+
+sort_box_plot_cat:
+  label: "Sort box plots by:"
+  radio_list:
+    - label: Median
+      value: median
+    - label: Categorical value
+      value: cat_value
+  first_item: median
+  radio_id: sort_box_plot_cat
 
 color_dropdown:
   label: Color
@@ -252,6 +298,26 @@ log_linear_dropdown:
   first_item: Linear
   dropdown_id: log_linear_dropdown
 
+cfa_gfa_map:
+  cfa:
+    eci: eci_a_to_c_cfa
+    epi: epi_a_to_c_cfa
+    api: api_a_to_c_cfa
+    sfpi: sfpi_a_to_c_cfa
+    odpi: odpi_a_to_c_cfa
+    nredi: nredi_a_to_c_cfa
+    ec_per_occupant: ec_per_occupant_a_to_c
+    ec_per_res_unit: ec_per_res_unit_a_to_c
+  gfa:
+    eci: eci_a_to_c_gfa
+    epi: epi_a_to_c_gfa
+    api: api_a_to_c_gfa
+    sfpi: sfpi_a_to_c_gfa
+    odpi: odpi_a_to_c_gfa
+    nredi: nredi_a_to_c_gfa
+    ec_per_occupant: ec_per_occupant_a_to_c
+    ec_per_res_unit: ec_per_res_unit_a_to_c
+
 field_name_map:
   site_country: Country
   site_region: Region
@@ -284,6 +350,12 @@ field_name_map:
   sfpi_a_to_c_gfa: Smog Formation Potential Intensity
   odpi_a_to_c_gfa: Ozone Depletion Potential Intensity
   nredi_a_to_c_gfa: Natural Resource Depletion Intensity
+  eci_a_to_c_cfa: Embodied Carbon Intensity
+  epi_a_to_c_cfa: Eutrophication Potential Intensity
+  api_a_to_c_cfa: Acidification Potential Intensity
+  sfpi_a_to_c_cfa: Smog Formation Potential Intensity
+  odpi_a_to_c_cfa: Ozone Depletion Potential Intensity
+  nredi_a_to_c_cfa: Natural Resource Depletion Intensity
   ec_per_occupant_a_to_c: Embodied Carbon per Occupant
   ec_per_res_unit_a_to_c: Embodied Carbon per Residential Unit
   bldg_cfa: Constructed Floor Area
@@ -301,3 +373,216 @@ field_name_map:
   str_grid_long: Typical Column Grid, Long Direction
   str_grid_short: Typical Column Grid, Short Direction
   lca_ec_reduction_percent: Embodied Carbon Reduction Percentage
+
+category_order_map:
+  site_country:
+    - United States
+    - Canada
+  site_region:
+    - Eastern
+    - South Eastern
+    - Great Lakes Midwest
+    - North Central
+    - South Central
+    - Rocky Mountains
+    - Pacific Northwest
+    - Pacific Southwest
+    - Canada
+  site_state_province:
+    - Massachusetts
+    - New York
+    - Pennsylvania
+    - Texas
+    - Colorado
+    - British Columbia
+    - Washington
+    - Oregon
+    - California
+  site_clim_zone:
+    - Zone 1A (Very Hot Humid)
+    - Zone 2A (Hot Humid)
+    - Zone 2B (Hot Dry)
+    - Zone 3A (Warm Humid)
+    - Zone 3B (Warm Dry)
+    - Zone 3C (Warm Marine)
+    - Zone 4A (Mixed Humid)
+    - Zone 4C (Mixed Marine)
+    - Zone 5A (Cool Humid)
+    - Zone 5B (Cool Dry)
+    - Zone 6A (Cold Humid)
+    - Zone 6B (Cold Dry)
+    - Zone 7 (Very Cold)
+    - Zone 8 (Subarcitc/Arctic)
+    - Can. 4 (<3000 HDD)
+    - Can. 7B (6000-6999 HDD)
+  bldg_proj_type:
+    - New Construction
+    - Major Renovation
+    - Minor Renovation
+    - Tenant Improvement
+  bldg_ibc_type:
+    - Type I-A
+    - Type I-B
+    - Type II-A
+    - Type II-B
+    - Type III-A
+    - Type III-B
+    - Type IV-B
+    - Type IV-C
+    - Type IV-HT
+    - Type V-A
+    - Type V-B
+  bldg_park_type: 
+    - No Parking
+    - Above grade, within footprint of main structure
+    - Above grade, attached to main structure
+    - Below Grade
+  bldg_prim_use: 
+    - Office
+    - Education
+    - "Residential: Multifamily (5 or more units)"
+    - Public Assembly
+    - Laboratory
+    - Warehouse and Storage
+    - Healthcare
+    - Public Order and Safety
+    - Transportation Hub
+    - Lodging
+    - Mercantile
+    - Parking
+    - Industrial
+    - Food Service
+    - Religious Worship
+    - Other
+  bldg_sec_use:
+    - Mercantile
+    - Office
+    - Other
+    - Public Assembly
+    - Education
+    - Food Service
+    - Education
+    - Warehouse and Storage
+    - Laboratory
+    - Healthcare
+    - Public Order and Safety
+    - Religious Worship
+    - "Residential: Multifamily (2-4 units)"
+  bldg_stories_above:
+    - 1 story
+    - 2 to 5 stories
+    - 6 to 10 stories
+    - 11 to 15 stories
+    - 16 to 20 stories
+    - 21 or more stories
+  bldg_stories_below:
+    - 0 stories
+    - 1 story
+    - 2 stories
+    - 3 stories
+    - 4 or more stories
+  bldg_height:
+    - 0-7.5 m
+    - 7.6-15 m
+    - 15.1-22.5 m
+    - 22.6-30 m
+    - 31-45 m
+    - 46-60 m
+    - 61-90 m
+    - Over 90 m
+  str_seis_site_cls:
+    - A
+    - B
+    - C
+    - D
+    - E
+    - F
+  str_sdc:
+    - A
+    - B
+    - C
+    - D
+    - E
+    - F
+  str_prim_horiz_sys:
+    - "Concrete: PT framing"
+    - "Concrete: Non-PT framing"
+    - "Concrete: Precast"
+    - "Concrete: Other"
+    - "Steel: Frame + concrete on metal deck"
+    - "Steel: Frame + bare metal deck"
+    - "Steel: Other"
+    - "Wood: Joists and sheathing"
+    - "Wood: Engineered panels"
+    - "Wood: Other"
+  str_prim_vert_sys:
+    - "Concrete: CIP"
+    - "Concrete: Precast"
+    - "Concrete: Other"
+    - "Steel: Columns"
+    - "Steel: Cold-formed"
+    - "Wood: Mass timber"
+    - "Wood: Light-frame"
+    - "Wood: Other"
+    - Masonry
+  str_lat_sys:
+    - "Concrete: Shear walls"
+    - "Concrete: Moment frames"
+    - "Concrete: Other"
+    - "Steel: Braced frames"
+    - "Steel: Moment frames"
+    - "Steel: Other"
+    - Light Frame shear panels
+    - "Masonry: Shear walls"
+    - "Wood: Shear panels"
+    - "Wood: Other"
+  str_podium:
+    - Not a podium building
+    - Primary system defined above is on a podium
+    - Primary system defined above is a podium
+  str_fdn_type:
+    - Shallow foundation
+    - Deep foundation < 50' (15m)
+    - Deep foundation > 50' (15m)
+    - Other Foundation System
+  str_sys_summary:
+    - Concrete
+    - Steel
+    - Steel/Concrete
+    - Steel/Masonry
+    - "Wood: Mass Timber"
+    - "Wood: Light-frame"
+    - Other
+  lca_design_phase:
+    - Design Development
+    - Construction Documents
+    - Construction
+    - Completed
+  lca_software:
+    - Tally LCA
+    - One Click LCA
+  lca_purp_of_assessment:
+    - "Required: Client Directive"
+    - "Required: Governing Policy"
+    - "Required: LEED Proposed"
+    - "Required: ILFI Proposed"
+    - "Required: Other"
+    - "Voluntary: Design Milestone Tracking"
+    - "Voluntary: Hot Spot Analysis"
+    - "Voluntary: Performance Declaration"
+    - "Voluntary: Design Iteration Analysis"
+    - "Voluntary: Internal Benchmarking"
+    - "Voluntary: Other"
+  lca_phys_scope:
+    - BSE
+    - BSEC
+    - BSEF
+    - BSECF
+    - SCF
+    - ECF
+    - SEC
+    - SECF
+    - CF
+  lca_ec_reductions:
+    - Yes
+    - No

@@ -17,7 +17,7 @@ project_number_jumbotron = create_jumbotron(
 )
 
 avg_impact_jumbotron = create_jumbotron(
-    subtitle='Average kg CO2 / m2',
+    subtitle='Average kgCO2e / m2',
     main_text_id='avg_impact_jumbotron'
 )
 
@@ -58,14 +58,15 @@ layout = html.Div(
                         dcc.Markdown(
                             '''
                             At present, the dashboard is in beta. There are
-                            currently four types of graphs available, with
-                            more to come in the future:
+                            currently two types of graphs available:
                             *  **Box plot** - the traditional benchmarking graph.
                             This plot will show evironmental impacts based on
-                            categorical variables
+                            categorical variables. All environmental impacts are
+                            inclusive of life cycle stages A-C.
                             *  **Scatter plot** - good for analyzing relationships.
                             This plot will show evironmental impacts compared
-                            to continuous variables.
+                            to continuous variables. All environmental impacts are
+                            inclusive of life cycle stages A-C.
                             ''',
                             className='fw-light'
                         ),
@@ -81,6 +82,10 @@ layout = html.Div(
                             (https://carbonleadershipforum.org/clf-wblca-v2/)**
                             - **[California Carbon Report]
                             (https://carbonleadershipforum.org/california-carbon/)**
+                            - **[Dataset hosted on Figshare]
+                            (https://doi.org/10.6084/m9.figshare.28462145.v1)**
+                            - **[Data Descriptor Paper (preprint)]
+                            (https://doi.org/10.21203/rs.3.rs-6108016/v1)**
                             - **[Data Collection User Guide]
                             (https://hdl.handle.net/1773/51285)**
                             - **[Data Entry Template]
