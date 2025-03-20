@@ -308,6 +308,7 @@ cfa_gfa_map:
     nredi: nredi_a_to_c_cfa
     ec_per_occupant: ec_per_occupant_a_to_c
     ec_per_res_unit: ec_per_res_unit_a_to_c
+    name: Constructed Floor Area
   gfa:
     eci: eci_a_to_c_gfa
     epi: epi_a_to_c_gfa
@@ -317,6 +318,7 @@ cfa_gfa_map:
     nredi: nredi_a_to_c_gfa
     ec_per_occupant: ec_per_occupant_a_to_c
     ec_per_res_unit: ec_per_res_unit_a_to_c
+    name: Gross Internal Floor Area
 
 field_name_map:
   site_country: Country

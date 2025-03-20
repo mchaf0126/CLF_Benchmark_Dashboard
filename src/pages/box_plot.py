@@ -1,3 +1,4 @@
+import textwrap
 import plotly.express as px
 import pandas as pd
 from dash import html, dcc, callback, Input, Output, State, register_page
@@ -157,6 +158,7 @@ def update_chart(category_x,
         'ec_per_res_unit': '(kgCO2e/residential unit)',
     }
     cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
+    # cfa_gfa_name_for_annotation = cfa_gfa_mapping.get('name')
     objective_for_graph = cfa_gfa_mapping.get(objective)
 
     if sort_type == 'median':
@@ -176,20 +178,23 @@ def update_chart(category_x,
     max_of_df = df[objective_for_graph].max()
     xshift = create_graph_xshift(max_value=max_of_df)
 
+    def customwrap(s, width=25):
+        if s is not None:
+            return "<br>".join(textwrap.wrap(s, width=width))
+
     fig = px.box(
-        df,
-        y=category_x,
-        x=objective_for_graph,
+        y=df[category_x].map(customwrap),
+        x=df[objective_for_graph],
         category_orders={
             category_x: category_order
         },
-        color_discrete_sequence=["#ffc700"]
-
+        color_discrete_sequence=["#ffc700"],
+        height=500
     )
     for s in df[category_x].unique():
         if len(df[df[category_x] == s]) > 0:
             fig.add_annotation(
-                y=str(s),
+                y=str(customwrap(s)),
                 x=max_of_df+xshift,
                 text=f'n={str(len(df[df[category_x]==s][category_x]))}',
                 showarrow=False
@@ -209,6 +214,20 @@ def update_chart(category_x,
     fig.update_layout(
         margin={'pad': 10},
     )
+#     fig.add_annotation(
+#         yref="paper",
+#         yanchor="bottom",
+#         y=-.25,
+#         text=f"""Note: {field_name_map.get(objective_for_graph)}
+# is normalized by {cfa_gfa_name_for_annotation}
+#         """,
+#         # Center the title horizontally over the plot area
+#         xref='paper',
+#         xanchor="left",
+#         x=0,
+#         showarrow=False,
+#         font=dict(size=12)
+#     )
     return fig
 
 
