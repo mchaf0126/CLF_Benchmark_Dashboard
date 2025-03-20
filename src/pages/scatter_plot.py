@@ -165,14 +165,14 @@ def update_chart(cont_x,
                  buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     units_map = {
-        'eci': '(kgCO2e/m2)',
-        'epi': '(kgNe/m2)',
-        'api': '(kgSO2e/m2)',
-        'sfpi': '(kgO3e/m2)',
-        'odpi': '(CFC-11e/m2)',
-        'nredi': '(MJ/m2)',
-        'ec_per_occupant': '(kgCO2e/occupant)',
-        'ec_per_res_unit': '(kgCO2e/residential unit)',
+        'eci': '(kgCO<sub>2</sub>e/m<sup>2</sup>)',
+        'epi': '(kgNe/m<sup>2</sup>)',
+        'api': '(kgSO<sub>2</sub>e/m<sup>2</sup>)',
+        'sfpi': '(kgO<sub>3</sub>e/m<sup>2</sup>)',
+        'odpi': '(CFC-11e/m<sup>2</sup>)',
+        'nredi': '(MJ/m<sup>2</sup>)',
+        'ec_per_occupant': '(kgCO<sub>2</sub>e/occupant)',
+        'ec_per_res_unit': '(kgCO<sub>2</sub>e/residential unit)',
     }
     if new_constr_toggle_cont == [1]:
         df = df[df['bldg_proj_type'] == 'New Construction']
@@ -206,7 +206,8 @@ def update_chart(cont_x,
             "#e93cac",
             "#4b2e83",
             '#c5b4e3'
-        ]
+        ],
+        height=600
     )
     fig.update_xaxes(
         title=f'{field_name_map.get(cont_x)} (n={df[~df[cont_x].isna()].shape[0]})',

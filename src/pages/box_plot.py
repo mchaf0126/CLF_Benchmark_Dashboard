@@ -148,14 +148,14 @@ def update_chart(category_x,
     if new_constr_toggle_cat == [1]:
         df = df[df['bldg_proj_type'] == 'New Construction']
     units_map = {
-        'eci': '(kgCO2e/m2)',
-        'epi': '(kgNe/m2)',
-        'api': '(kgSO2e/m2)',
-        'sfpi': '(kgO3e/m2)',
-        'odpi': '(CFC-11e/m2)',
-        'nredi': '(MJ/m2)',
-        'ec_per_occupant': '(kgCO2e/occupant)',
-        'ec_per_res_unit': '(kgCO2e/residential unit)',
+        'eci': '(kgCO<sub>2</sub>e/m<sup>2</sup>)',
+        'epi': '(kgNe/m<sup>2</sup>)',
+        'api': '(kgSO<sub>2</sub>e/m<sup>2</sup>)',
+        'sfpi': '(kgO<sub>3</sub>e/m<sup>2</sup>)',
+        'odpi': '(CFC-11e/m<sup>2</sup>)',
+        'nredi': '(MJ/m<sup>2</sup>)',
+        'ec_per_occupant': '(kgCO<sub>2</sub>e/occupant)',
+        'ec_per_res_unit': '(kgCO<sub>2</sub>e/residential unit)',
     }
     cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
     # cfa_gfa_name_for_annotation = cfa_gfa_mapping.get('name')
