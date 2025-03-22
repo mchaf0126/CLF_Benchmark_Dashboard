@@ -93,6 +93,93 @@ layout = html.Div(
                             ''',
                             className='fw-light'
                         ),
+                        html.Br(),
+                        dcc.Markdown(
+                            '''
+                            #### About the University of Washington (UW) Life Cycle Lab
+                            '''
+                        ),
+                        dcc.Markdown(
+                            '''
+                            The Life Cycle Lab at UW’s College of Built Environments leads
+                            research to advance life cycle assessment (LCA) data, methods,
+                            and approaches to enable the optimization of materials, buildings,
+                            and infrastructure. Our work is structured to inform impactful
+                            policies and practices that support global decarbonization efforts.
+                            We envision a transformed, decarbonized building
+                            industry – better buildings for a better planet.
+                            ''',
+                            className='fw-light'
+                        ),
+                        html.Br(),
+                        dcc.Markdown(
+                            '''
+                            #### Authors
+                            '''
+                        ),
+                        dcc.Markdown(
+                            '''
+                            The individuals from the Carbon Leadership Forum who worked on this
+                            dashboard are:
+                            - Brad Benke, Manager Low Carbon Buildings
+
+                            The individuals from the UW Life Cycle Lab who worked on this
+                            dashboard are:
+                            - Manuel Chafart, Researcher
+
+                            [CRediT]
+                            (https://www.elsevier.com/researcher/author/policies-and-guidelines/credit-author-statement)
+                            authorship contribution: Conceptualization - B.B., M.C.,
+                            Formal analysis: M.C; Methodology - B.B., M.C.;  Visualization: M.C
+                            ''',
+                            className='fw-light'
+                        ),
+                        html.Br(),
+                        dcc.Markdown(
+                            '''
+                            #### Acknowledgements
+                            '''
+                        ),
+                        dcc.Markdown(
+                            '''
+                            We would like to thank the individuals and respective firms
+                            who participated in the data collection and quality assurance
+                            process, this work would not have been possible without their
+                            incredible support and dedication to thisproject. These
+                            included: Arrowstreet Architects, Arup, BranchPattern,
+                            Brightworks Sustainability, Buro Happold, BVH Architecture,
+                            DCI Engineers, EHDD, Ellenzweig, Gensler, GGLO, Glumac,
+                            Group 14 Engineering, Ha/f ClimateDesign, HOK, KieranTimberlake,
+                            KPFF Consulting Engineers, Lake|Flato, LMN Architects,
+                            Mahlum Architects, Mead & Hunt, Inc., Mithun, Perkins&Will,
+                            reLoad Sustainable Design Inc., SERA Architects, Stok,
+                            The Green Engineer Inc., The Miller Hull Partnership, LLP.,
+                            Walter P Moore, and ZGF Architects LLP.
+                            ''',
+                            className='fw-light'
+                        ),
+                        html.Br(),
+                        dcc.Markdown(
+                            '''
+                            #### Citation
+                            '''
+                        ),
+                        dcc.Markdown(
+                            '''
+                            Chafart, M., Benke, B. (2025). WBLCA Benchmark Study v2 Dashboard
+                            (Version 1.0) \[Computer Software]. Life Cycle Lab,
+                            https://benchmark-v2.lifecyclelab.org/
+                            ''',
+                            className='fw-light'
+                        ),
+                        html.Br(),
+                        dcc.Markdown(
+                            '''
+                            **[(CC BY 4.0)](https://creativecommons.org/licenses/by/4.0)**
+                            Life Cycle Lab 2025
+                            ''',
+                            className='fw-light text-center'
+                        ),
                     ],
                     xs=9, sm=9, md=9, lg=9, xl=8, xxl=8,
                     class_name='pe-5'
