@@ -15,8 +15,8 @@ def create_header() -> html.Div:
                     dbc.Col(
                         html.A(
                             html.Img(
-                                src='assets/W-Logo_Purple_RGB.png',
-                                height="70px",
+                                src='assets/LCL-banner.png',
+                                height="45px",
                             ),
                             href='https://lifecyclelab.org'
                         ),

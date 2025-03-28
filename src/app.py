@@ -9,7 +9,6 @@ app = Dash(
     __name__,
     use_pages=True,
     suppress_callback_exceptions=True,
-    external_stylesheets=[dbc.themes.PULSE]
 )
 server = app.server
 current_file_path = Path(__file__)
