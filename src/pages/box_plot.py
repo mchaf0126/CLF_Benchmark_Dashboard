@@ -181,12 +181,16 @@ def update_chart(category_x,
     def customwrap(s, width=25):
         if s is not None:
             return "<br>".join(textwrap.wrap(s, width=width))
+    
+    df[category_x] = df[category_x].map(customwrap)
+    wrapped_category_order = [customwrap(s) for s in category_order]
 
     fig = px.box(
-        y=df[category_x].map(customwrap),
-        x=df[objective_for_graph],
+        data_frame=df,
+        y=category_x,
+        x=objective_for_graph,
         category_orders={
-            category_x: category_order
+            category_x: wrapped_category_order
         },
         color_discrete_sequence=["#ffc700"],
         height=500
@@ -194,7 +198,7 @@ def update_chart(category_x,
     for s in df[category_x].unique():
         if len(df[df[category_x] == s]) > 0:
             fig.add_annotation(
-                y=str(customwrap(s)),
+                y=str(s),
                 x=max_of_df+xshift,
                 text=f'n={str(len(df[df[category_x]==s][category_x]))}',
                 showarrow=False
@@ -214,20 +218,6 @@ def update_chart(category_x,
     fig.update_layout(
         margin={'pad': 10},
     )
-#     fig.add_annotation(
-#         yref="paper",
-#         yanchor="bottom",
-#         y=-.25,
-#         text=f"""Note: {field_name_map.get(objective_for_graph)}
-# is normalized by {cfa_gfa_name_for_annotation}
-#         """,
-#         # Center the title horizontally over the plot area
-#         xref='paper',
-#         xanchor="left",
-#         x=0,
-#         showarrow=False,
-#         font=dict(size=12)
-#     )
     return fig
 
 
