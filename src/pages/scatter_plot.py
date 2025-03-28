@@ -27,6 +27,9 @@ assert color_dropdown_yaml is not None, 'The config for cat. dropdowns could not
 new_constr_toggle_yaml = config.get('new_constr_toggle_cont')
 assert new_constr_toggle_yaml is not None, 'The config for new construction could not be set'
 
+outlier_toggle_yaml = config.get('outlier_toggle_cont')
+assert outlier_toggle_yaml is not None, 'The config for new construction could not be set'
+
 floor_area_radio_yaml = config.get('floor_area_normalization_cont')
 assert floor_area_radio_yaml is not None, 'The config for floor area norm. could not be set'
 
@@ -66,6 +69,12 @@ new_constr_toggle = create_toggle(
     toggle_id=new_constr_toggle_yaml['toggle_id'],
 )
 
+outlier_toggle = create_toggle(
+    toggle_list=outlier_toggle_yaml['toggle_list'],
+    first_item=outlier_toggle_yaml['first_item'],
+    toggle_id=outlier_toggle_yaml['toggle_id'],
+)
+
 floor_area_radio = create_radio_items(
     label=floor_area_radio_yaml['label'],
     radio_list=floor_area_radio_yaml['radio_list'],
@@ -96,7 +105,8 @@ controls_cont = dbc.Card(
         color_dropdown,
         floor_area_radio,
         log_linear_radio,
-        new_constr_toggle
+        new_constr_toggle,
+        outlier_toggle
     ],
     body=True,
 )
@@ -153,6 +163,7 @@ layout = html.Div(
         Input('log_linear_radio', 'value'),
         Input('floor_area_normal_cont', 'value'),
         Input('new_constr_toggle_cont', 'value'),
+        Input('outlier_toggle_cont', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
@@ -162,6 +173,7 @@ def update_chart(cont_x,
                  log_linear,
                  cfa_gfa_type,
                  new_constr_toggle_cont,
+                 outlier_toggle_cont,
                  buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     units_map = {
@@ -176,18 +188,45 @@ def update_chart(cont_x,
     }
     if new_constr_toggle_cont == [1]:
         df = df[df['bldg_proj_type'] == 'New Construction']
+
     cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
     objective_for_graph = cfa_gfa_mapping.get(objective)
-    max_of_df = df[cont_x].max()
-    xshift = create_graph_xshift(max_value=max_of_df)
+
+    if outlier_toggle_cont == [1]:
+        Q1_objective = df[objective_for_graph].quantile(0.25)
+        Q3_objective = df[objective_for_graph].quantile(0.75)
+        IQR_objective = Q3_objective - Q1_objective
+        df = df[
+            (df[objective_for_graph] < Q3_objective + 3 * IQR_objective)
+            & (df[objective_for_graph] > Q1_objective - 3 * IQR_objective)
+        ]
+        Q1_cont = df[cont_x].quantile(0.25)
+        Q3_cont = df[cont_x].quantile(0.75)
+        IQR_cont = Q3_cont - Q1_cont
+        df = df[
+            (df[cont_x] < Q3_cont + 3 * IQR_cont)
+            & (df[cont_x] > Q1_cont - 3 * IQR_cont)
+        ]
+
+    max_of_df = df[objective_for_graph].max()
+    max_of_cont_x = df[cont_x].max()
+    min_of_df = df[objective_for_graph].min()
+    min_of_cont_x = df[cont_x].min()
+    xshift = create_graph_xshift(max_value=max_of_cont_x)
+    yshift = create_graph_xshift(max_value=max_of_df)
     log_flag = False
     if log_linear == 'Logarithmic':
         log_flag = True
-        max_of_df = log(max_of_df + xshift, 10)
+        range_x_for_graph = [min_of_cont_x, max_of_cont_x + xshift]
+        range_y_for_graph = [min_of_df, max_of_df + yshift]
     else:
-        max_of_df = max_of_df + xshift
+        range_x_for_graph = [0, max_of_cont_x + xshift]
+        range_y_for_graph = [0, max_of_df + yshift]
     if color_value == 'No color':
         color_value = None
+        point_count = df[~df[[cont_x, objective_for_graph]].isna().any(axis=1)].shape[0]
+    else:
+        point_count = df[~df[[cont_x, objective_for_graph, color_value]].isna().any(axis=1)].shape[0]
 
     fig = px.scatter(
         df,
@@ -196,6 +235,8 @@ def update_chart(cont_x,
         color=color_value,
         log_x=log_flag,
         log_y=log_flag,
+        range_x=range_x_for_graph,
+        range_y=range_y_for_graph,
         color_discrete_sequence=[
             "#32006e",
             "#e8e3d3",
@@ -209,19 +250,24 @@ def update_chart(cont_x,
         ],
         height=600
     )
+
     fig.update_xaxes(
-        title=f'{field_name_map.get(cont_x)} (n={df[~df[cont_x].isna()].shape[0]})',
-        range=[0, max_of_df],
+        title=\
+            f'{field_name_map.get(cont_x)} \
+(n={point_count})',
         tickformat=',.2f',
+        minor=dict(showgrid=True)
         )
     fig.update_yaxes(
         title=f'{field_name_map.get(objective_for_graph)} {units_map.get(objective)}',
-        tickformat=',.0f',
+        tickformat=',.2f',
+        minor=dict(showgrid=True)
     )
     fig.update_layout(
         margin={'pad': 10},
         legend_title=None
     )
+    print(max_of_cont_x) 
     return fig
 
 
@@ -236,6 +282,7 @@ def update_chart(cont_x,
         Input('color_dropdown', 'value'),
         Input('floor_area_normal_cont', 'value'),
         Input('new_constr_toggle_cont', 'value'),
+        Input('outlier_toggle_cont', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
@@ -244,12 +291,28 @@ def update_table(cont_value,
                  color_value,
                  cfa_gfa_type,
                  new_constr_toggle_cont,
+                 outlier_toggle_cont,
                  buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     if new_constr_toggle_cont == [1]:
         df = df[df['bldg_proj_type'] == 'New Construction']
+
     cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
     impact_value_for_graph = cfa_gfa_mapping.get(impact_value)
+    if color_value == 'No color':
+        df = df[~df[[cont_value, impact_value_for_graph]].isna().any(axis=1)]
+    else:
+        df = df[~df[[cont_value, impact_value_for_graph, color_value]].isna().any(axis=1)]
+
+    if outlier_toggle_cont == [1]:
+        Q1 = df[impact_value_for_graph].quantile(0.25)
+        Q3 = df[impact_value_for_graph].quantile(0.75)
+        IQR = Q3 - Q1
+        df = df[
+            (df[impact_value_for_graph] < Q3 + 3 * IQR)
+            & (df[impact_value_for_graph] > Q1 - 3 * IQR)
+        ]
+
     valeformatter = {"function": "d3.format(',.2f')(params.value)"}
     if color_value == 'No color':
         data = df[
@@ -293,6 +356,7 @@ def update_table(cont_value,
         State('color_dropdown', 'value'),
         State('floor_area_normal_cont', 'value'),
         State('new_constr_toggle_cont', 'value'),
+        State('outlier_toggle_cont', 'value')
     ],
     prevent_initial_call=True,
 )
@@ -302,13 +366,26 @@ def func(cont_value,
          buildings_metadata,
          color_value,
          cfa_gfa_type,
-         new_constr_toggle_cont):
+         new_constr_toggle_cont,
+         outlier_toggle_cont):
     if n_clicks > 0:
         df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
+
         if new_constr_toggle_cont == [1]:
             df = df[df['bldg_proj_type'] == 'New Construction']
+
         cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
         impact_value_for_graph = cfa_gfa_mapping.get(impact_value)
+
+        if outlier_toggle_cont == [1]:
+            Q1 = df[impact_value_for_graph].quantile(0.25)
+            Q3 = df[impact_value_for_graph].quantile(0.75)
+            IQR = Q3 - Q1
+            df = df[
+                (df[impact_value_for_graph] < Q3 + 3 * IQR)
+                & (df[impact_value_for_graph] > Q1 - 3 * IQR)
+            ]
+
         if color_value == "No Color":
             return dcc.send_data_frame(
                 df[[cont_value, impact_value_for_graph]].sort_values(by=cont_value).to_csv,

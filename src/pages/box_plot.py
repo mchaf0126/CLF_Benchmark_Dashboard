@@ -24,6 +24,9 @@ assert total_impact_dropdown_yaml is not None, 'The config for total impacts cou
 new_constr_toggle_yaml = config.get('new_constr_toggle_cat')
 assert new_constr_toggle_yaml is not None, 'The config for new construction could not be set'
 
+outlier_toggle_yaml = config.get('outlier_toggle_cat')
+assert outlier_toggle_yaml is not None, 'The config for outlier toggle could not be set'
+
 floor_area_radio_yaml = config.get('floor_area_normalization_cat')
 assert floor_area_radio_yaml is not None, 'The config for floor area norm. could not be set'
 
@@ -59,6 +62,13 @@ new_constr_toggle = create_toggle(
     toggle_id=new_constr_toggle_yaml['toggle_id'],
 )
 
+outlier_toggle = create_toggle(
+    toggle_list=outlier_toggle_yaml['toggle_list'],
+    first_item=outlier_toggle_yaml['first_item'],
+    toggle_id=outlier_toggle_yaml['toggle_id'],
+)
+
+
 floor_area_radio = create_radio_items(
     label=floor_area_radio_yaml['label'],
     radio_list=floor_area_radio_yaml['radio_list'],
@@ -79,7 +89,8 @@ controls_cat = dbc.Card(
         total_impact_dropdown,
         floor_area_radio,
         sort_box_radio,
-        new_constr_toggle
+        new_constr_toggle,
+        outlier_toggle
     ],
     body=True,
 )
@@ -135,6 +146,7 @@ layout = html.Div(
         Input('sort_box_plot_cat', 'value'),
         Input('floor_area_normal_cat', 'value'),
         Input('new_constr_toggle_cat', 'value'),
+        Input('outlier_toggle_cat', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
@@ -143,6 +155,7 @@ def update_chart(category_x,
                  sort_type,
                  cfa_gfa_type,
                  new_constr_toggle_cat,
+                 outlier_toggle_cat,
                  buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     if new_constr_toggle_cat == [1]:
@@ -160,6 +173,15 @@ def update_chart(category_x,
     cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
     # cfa_gfa_name_for_annotation = cfa_gfa_mapping.get('name')
     objective_for_graph = cfa_gfa_mapping.get(objective)
+    
+    if outlier_toggle_cat == [1]:
+        Q1 = df[objective_for_graph].quantile(0.25)
+        Q3 = df[objective_for_graph].quantile(0.75)
+        IQR = Q3 - Q1
+        df = df[
+            (df[objective_for_graph] < Q3 + 3 * IQR)
+            & (df[objective_for_graph] > Q1 - 3 * IQR)
+        ]
 
     if sort_type == 'median':
         grouped_medians = (
@@ -203,14 +225,22 @@ def update_chart(category_x,
                 text=f'n={str(len(df[df[category_x]==s][category_x]))}',
                 showarrow=False
             )
+
+    if objective in ['epi', 'api', 'sfpi']:
+        tickformat_decimal =',.2f'
+    elif objective == 'odpi':
+        tickformat_decimal =',.6f'
+    else:
+        tickformat_decimal =',.0f'     
+
     fig.update_xaxes(
         title=field_name_map.get(objective_for_graph) + f' {units_map.get(objective)}',
         range=[0, max_of_df+xshift],
-        tickformat=',.0f',
+        tickformat=tickformat_decimal,
         )
     fig.update_yaxes(
         title=field_name_map.get(category_x),
-        tickformat=',.0f',
+        tickformat=tickformat_decimal,
     )
     fig.update_traces(
         quartilemethod='inclusive',
@@ -231,6 +261,7 @@ def update_chart(category_x,
         Input('total_impact_dropdown', 'value'),
         Input('floor_area_normal_cat', 'value'),
         Input('new_constr_toggle_cat', 'value'),
+        Input('outlier_toggle_cat', 'value'),
         State('buildings_metadata', 'data')
     ]
 )
@@ -238,6 +269,7 @@ def update_table(cat_value,
                  impact_value,
                  cfa_gfa_type,
                  new_constr_toggle_cat,
+                 outlier_toggle_cat,
                  buildings_metadata):
     df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
     df[cat_value] = df[cat_value].fillna('NULL')
@@ -246,6 +278,15 @@ def update_table(cat_value,
 
     cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
     impact_value_for_graph = cfa_gfa_mapping.get(impact_value)
+    
+    if outlier_toggle_cat == [1]:
+        Q1 = df[impact_value_for_graph].quantile(0.25)
+        Q3 = df[impact_value_for_graph].quantile(0.75)
+        IQR = Q3 - Q1
+        df = df[
+            (df[impact_value_for_graph] < Q3 + 3 * IQR)
+            & (df[impact_value_for_graph] > Q1 - 3 * IQR)
+        ]
 
     tbl_df = (
         df.groupby(
@@ -308,6 +349,7 @@ def update_table(cat_value,
         State('categorical_dropdown', 'value'),
         State('total_impact_dropdown', 'value'),
         State('new_constr_toggle_cat', 'value'),
+        State('outlier_toggle_cat', 'value'),
         State('buildings_metadata', 'data')
     ],
     prevent_initial_call=True,
@@ -317,6 +359,7 @@ def func(n_clicks,
          cat_value,
          impact_value,
          new_constr_toggle_cat,
+         outlier_toggle_cat,
          buildings_metadata):
     if n_clicks > 0:
         df = pd.DataFrame.from_dict(buildings_metadata.get('buildings_metadata'))
@@ -326,6 +369,15 @@ def func(n_clicks,
 
         cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
         impact_value_for_graph = cfa_gfa_mapping.get(impact_value)
+        
+        if outlier_toggle_cat == [1]:
+            Q1 = df[impact_value_for_graph].quantile(0.25)
+            Q3 = df[impact_value_for_graph].quantile(0.75)
+            IQR = Q3 - Q1
+            df = df[
+                (df[impact_value_for_graph] < Q3 + 3 * IQR)
+                & (df[impact_value_for_graph] > Q1 - 3 * IQR)
+            ]
 
         tbl_df = (
             df.groupby(

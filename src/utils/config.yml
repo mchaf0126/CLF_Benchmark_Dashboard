@@ -177,6 +177,22 @@ new_constr_toggle_cont:
   first_item: []
   toggle_id: new_constr_toggle_cont
 
+outlier_toggle_cat:
+  label: ""
+  toggle_list:
+    - label: Remove outliers
+      value: 1
+  first_item: []
+  toggle_id: outlier_toggle_cat
+
+outlier_toggle_cont:
+  label: ""
+  toggle_list:
+    - label: Remove outliers
+      value: 1
+  first_item: []
+  toggle_id: outlier_toggle_cont
+
 floor_area_normalization_cat:
   label: "Normalize intensity by:"
   radio_list:

@@ -45,19 +45,19 @@ def create_graph_xshift(max_value: float) -> int:
     """
     if max_value <= 1:
         return 0.1
-    elif 1 < max_value < 25:
+    elif 1 < max_value <= 25:
         return 2
-    elif 25 < max_value < 50:
+    elif 25 < max_value <= 50:
         return 5
-    elif 50 < max_value < 100:
+    elif 50 < max_value <= 100:
         return 10
-    elif 100 < max_value < 1000:
+    elif 100 < max_value <= 1000:
         return 25
-    elif 1000 < max_value < 10000:
+    elif 1000 < max_value <= 10000:
         return 100
-    elif 10000 < max_value < 50000:
+    elif 10000 < max_value <= 50000:
         return 1000
-    elif 50000 < max_value < 100000:
+    elif 50000 < max_value <= 100000:
         return 5000
     else:
         return 20000
