@@ -310,15 +310,31 @@ def update_table(cat_value,
         left_on=cat_value,
         right_on=cat_value
     )
+    tbl_df = pd.merge(
+        left=tbl_df,
+        right=df.groupby(cat_value)[impact_value_for_graph].quantile(0.2).rename('20%'),
+        how='left',
+        left_on=cat_value,
+        right_on=cat_value
+    )
+    tbl_df = pd.merge(
+        left=tbl_df,
+        right=df.groupby(cat_value)[impact_value_for_graph].quantile(0.8).rename('80%'),
+        how='left',
+        left_on=cat_value,
+        right_on=cat_value
+    )
 
     float_columns = [
-        'mean',
         'std',
-        'max',
         'min',
-        'median',
+        '20%',
         'Q1',
-        'Q3'
+        'median',
+        'mean',
+        'Q3',
+        '80%',
+        'max',
     ]
 
     if impact_value in ['epi', 'api', 'sfpi']:
@@ -401,6 +417,35 @@ def func(n_clicks,
             left_on=cat_value,
             right_on=cat_value
         )
+        tbl_df = pd.merge(
+            left=tbl_df,
+            right=df.groupby(cat_value)[impact_value_for_graph].quantile(0.2).rename('20%'),
+            how='left',
+            left_on=cat_value,
+            right_on=cat_value
+        )
+        tbl_df = pd.merge(
+            left=tbl_df,
+            right=df.groupby(cat_value)[impact_value_for_graph].quantile(0.8).rename('80%'),
+            how='left',
+            left_on=cat_value,
+            right_on=cat_value
+        )
+        tbl_df = tbl_df[
+            [
+                cat_value,
+                'count',
+                'std',
+                'min',
+                '20%',
+                'Q1',
+                'median',
+                'mean',
+                'Q3',
+                '80%',
+                'max'
+            ]
+        ]
 
         return dcc.send_data_frame(
             tbl_df.to_csv,

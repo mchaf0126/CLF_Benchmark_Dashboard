@@ -267,7 +267,6 @@ def update_chart(cont_x,
         margin={'pad': 10},
         legend_title=None
     )
-    print(max_of_cont_x) 
     return fig
 
 

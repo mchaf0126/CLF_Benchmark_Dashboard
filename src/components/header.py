@@ -16,7 +16,7 @@ def create_header() -> html.Div:
                         html.A(
                             html.Img(
                                 src='assets/LCL-banner.png',
-                                height="45px",
+                                height="40px",
                             ),
                             href='https://lifecyclelab.org'
                         ),
