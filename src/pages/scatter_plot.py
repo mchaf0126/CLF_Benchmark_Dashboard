@@ -208,6 +208,14 @@ def update_chart(cont_x,
             & (df[cont_x] > Q1_cont - 3 * IQR_cont)
         ]
 
+    if color_value == 'No color':
+        color_value = None
+        point_count = df[~df[[cont_x, objective_for_graph]].isna().any(axis=1)].shape[0]
+        df = df[~df[[cont_x, objective_for_graph]].isna().any(axis=1)]
+    else:
+        point_count = df[~df[[cont_x, objective_for_graph, color_value]].isna().any(axis=1)].shape[0]
+        df = df[~df[[cont_x, objective_for_graph, color_value]].isna().any(axis=1)]
+
     max_of_df = df[objective_for_graph].max()
     max_of_cont_x = df[cont_x].max()
     min_of_df = df[objective_for_graph].min()
@@ -222,11 +230,6 @@ def update_chart(cont_x,
     else:
         range_x_for_graph = [0, max_of_cont_x + xshift]
         range_y_for_graph = [0, max_of_df + yshift]
-    if color_value == 'No color':
-        color_value = None
-        point_count = df[~df[[cont_x, objective_for_graph]].isna().any(axis=1)].shape[0]
-    else:
-        point_count = df[~df[[cont_x, objective_for_graph, color_value]].isna().any(axis=1)].shape[0]
 
     fig = px.scatter(
         df,
@@ -298,10 +301,6 @@ def update_table(cont_value,
 
     cfa_gfa_mapping = cfa_gfa_map.get(cfa_gfa_type)
     impact_value_for_graph = cfa_gfa_mapping.get(impact_value)
-    if color_value == 'No color':
-        df = df[~df[[cont_value, impact_value_for_graph]].isna().any(axis=1)]
-    else:
-        df = df[~df[[cont_value, impact_value_for_graph, color_value]].isna().any(axis=1)]
 
     if outlier_toggle_cont == [1]:
         Q1 = df[impact_value_for_graph].quantile(0.25)
@@ -311,6 +310,18 @@ def update_table(cont_value,
             (df[impact_value_for_graph] < Q3 + 3 * IQR)
             & (df[impact_value_for_graph] > Q1 - 3 * IQR)
         ]
+        Q1_cont = df[cont_value].quantile(0.25)
+        Q3_cont = df[cont_value].quantile(0.75)
+        IQR_cont = Q3_cont - Q1_cont
+        df = df[
+            (df[cont_value] < Q3_cont + 3 * IQR_cont)
+            & (df[cont_value] > Q1_cont - 3 * IQR_cont)
+        ]
+    
+    if color_value == 'No color':
+        df = df[~df[[cont_value, impact_value_for_graph]].isna().any(axis=1)]
+    else:
+        df = df[~df[[cont_value, impact_value_for_graph, color_value]].isna().any(axis=1)]
 
     valeformatter = {"function": "d3.format(',.2f')(params.value)"}
     if color_value == 'No color':
@@ -384,6 +395,18 @@ def func(cont_value,
                 (df[impact_value_for_graph] < Q3 + 3 * IQR)
                 & (df[impact_value_for_graph] > Q1 - 3 * IQR)
             ]
+            Q1_cont = df[cont_value].quantile(0.25)
+            Q3_cont = df[cont_value].quantile(0.75)
+            IQR_cont = Q3_cont - Q1_cont
+            df = df[
+                (df[cont_value] < Q3_cont + 3 * IQR_cont)
+                & (df[cont_value] > Q1_cont - 3 * IQR_cont)
+            ]
+
+        if color_value == 'No color':
+            df = df[~df[[cont_value, impact_value_for_graph]].isna().any(axis=1)]
+        else:
+            df = df[~df[[cont_value, impact_value_for_graph, color_value]].isna().any(axis=1)]
 
         if color_value == "No Color":
             return dcc.send_data_frame(
