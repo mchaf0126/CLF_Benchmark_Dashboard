@@ -34,18 +34,30 @@ layout = html.Div(
                         ),
                         dcc.Markdown(
                             '''
-                            In 2017, the CLF published the Embodied Carbon
-                            Benchmark Study for North American buildings.
-                            Since then, the practice of whole-building life
-                            cycle assessment (WBLCA) has grown rapidly in the
-                            AEC industry, and it has become clear that more
-                            robust and reliable benchmarks are critical for
-                            advancing work in this field. This project will
-                            fill a critical gap in the AEC industry and help
-                            enable architects, engineers, policy makers, and
-                            the entire design community to work towards
+                            In 2017, the Carbon Leadership Forum (CLF) at the 
+                            University of Washington published the [Embodied 
+                            Carbon Benchmark Study V1]
+                            (https://carbonleadershipforum.org/lca-benchmark-database/)
+                            and [Visualization Tool]
+                            (https://carbonleadershipforum.org/embodied-carbon-benchmark-study-data-visualization/). 
+                            Since then, the practice of whole-building life 
+                            cycle assessment (WBLCA) has grown rapidly, and 
+                            it became clear that more robust and reliable 
+                            benchmarks are critical for advancing work in this
+                            field. This project fills a critical gap and helps 
+                            enable architects, engineers, policy makers, and 
+                            the entire design community to work towards 
                             realistic and measurable embodied carbon reductions
                             at the building scale.
+                            
+                            The [WBLCA Benchmark Study V2]
+                            (https://carbonleadershipforum.org/clf-wblca-v2/)
+                            began while the Carbon Leadership Forum (CLF) 
+                            was hosted at the University 
+                            of Washington (UW). After the CLF became an 
+                            independent nonprofit in the spring of 2024, the 
+                            study continued as a collaboration between the UW’s 
+                            newly named Life Cycle Lab and CLF.
                             ''',
                             className='fw-light'
                         ),
@@ -57,16 +69,18 @@ layout = html.Div(
                         ),
                         dcc.Markdown(
                             '''
-                            At present, the dashboard is in beta. There are
+                            There are
                             currently two types of graphs available:
-                            *  **Box plot** - the traditional benchmarking graph.
-                            This plot will show evironmental impacts based on
-                            categorical variables. All environmental impacts are
-                            inclusive of life cycle stages A-C.
+                            *  **Box plot** - the traditional benchmarking graph. 
+                            This plot shows environmental impacts based on categorical 
+                            variables (e.g. building use, number of stories or 
+                            location). All environmental impacts are inclusive
+                            of life cycle stages A-C.
                             *  **Scatter plot** - good for analyzing relationships.
-                            This plot will show evironmental impacts compared
-                            to continuous variables. All environmental impacts are
-                            inclusive of life cycle stages A-C.
+                            This plot shows environmental impacts compared to continuous
+                            variables (e.g. floor area, window-to-wall ratio or 
+                            column spacing). All environmental impacts are inclusive
+                            of life cycle stages A-C.
                             ''',
                             className='fw-light'
                         ),
@@ -90,6 +104,8 @@ layout = html.Div(
                             (https://hdl.handle.net/1773/51285)**
                             - **[Data Entry Template]
                             (https://hdl.handle.net/1773/51286)**
+                            - **[Github Repository for Dashboard]
+                            ()**
                             ''',
                             className='fw-light'
                         ),
@@ -101,7 +117,8 @@ layout = html.Div(
                         ),
                         dcc.Markdown(
                             '''
-                            The Life Cycle Lab at UW’s College of Built Environments leads
+                            The [Life Cycle Lab](https://www.lifecyclelab.org/) 
+                            at UW’s College of Built Environments leads
                             research to advance life cycle assessment (LCA) data, methods,
                             and approaches to enable the optimization of materials, buildings,
                             and infrastructure. Our work is structured to inform impactful
@@ -121,16 +138,15 @@ layout = html.Div(
                             '''
                             The individuals from the Carbon Leadership Forum who worked on this
                             dashboard are:
-                            - Brad Benke, Manager Low Carbon Buildings
-
-                            The individuals from the UW Life Cycle Lab who worked on this
-                            dashboard are:
-                            - Manuel Chafart, Researcher
+                            - Brad Benke, Reseacher (now at Carbon Leadership Forum)
+                            - Manuel Chafart, Researcher (now at Carbon Leadership Forum)
+                            - Kathrina Simonen, Professor
 
                             [CRediT]
                             (https://www.elsevier.com/researcher/author/policies-and-guidelines/credit-author-statement)
                             authorship contribution: Conceptualization - B.B., M.C.,
-                            Formal analysis: M.C; Methodology - B.B., M.C.;  Visualization: M.C
+                            Formal analysis: M.C; Methodology - B.B., M.C.;  Visualization: M.C;
+                            Supervision and Funding Acquisition: K.S.
                             ''',
                             className='fw-light'
                         ),
@@ -166,7 +182,7 @@ layout = html.Div(
                         ),
                         dcc.Markdown(
                             '''
-                            Chafart, M., Benke, B. (2025). WBLCA Benchmark Study v2 Dashboard
+                            Chafart, M., Benke, B., Simonen, K. (2025). WBLCA Benchmark Study v2 Dashboard
                             (Version 1.0) \[Computer Software]. Life Cycle Lab,
                             https://benchmark-v2.lifecyclelab.org/
                             ''',
@@ -176,7 +192,7 @@ layout = html.Div(
                         dcc.Markdown(
                             '''
                             **[(CC BY 4.0)](https://creativecommons.org/licenses/by/4.0)**
-                            Life Cycle Lab 2025
+                            2025
                             ''',
                             className='fw-light text-center'
                         ),
