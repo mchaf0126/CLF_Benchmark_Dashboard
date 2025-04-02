@@ -2,7 +2,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 
-def create_toggle(toggle_list: list, first_item: str, toggle_id: str) -> html.Div:
+def create_toggle(toggle_list: list, first_item: str, toggle_id: str, tooltip_id: str) -> html.Div:
     """_summary_
 
     Args:
@@ -22,8 +22,13 @@ def create_toggle(toggle_list: list, first_item: str, toggle_id: str) -> html.Di
                 value=first_item,
                 id=toggle_id,
                 switch=True,
+            ),
+            html.Div(
+                '  🛈',
+                id=tooltip_id,
+                className='ms-1'
             )
         ],
-        className='mb-4'
+        className='d-flex mb-4'
     )
     return toggle

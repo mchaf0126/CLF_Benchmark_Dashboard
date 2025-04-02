@@ -2,7 +2,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 
-def create_radio_items(label: str, radio_list: list, first_item: str, radio_id: str) -> html.Div:
+def create_radio_items(label: str, tooltip_id: str, radio_list: list, first_item: str, radio_id: str) -> html.Div:
     """_summary_
 
     Args:
@@ -17,12 +17,21 @@ def create_radio_items(label: str, radio_list: list, first_item: str, radio_id: 
 
     radio_items = html.Div(
         [
-            dbc.Label(label),
+            dbc.Label(
+                [
+                    label,
+                    html.Span(
+                        ' 🛈',
+                        id=tooltip_id
+                    )
+                ]
+            ),
             dbc.RadioItems(
                 options=radio_list,
                 value=first_item,
                 id=radio_id,
                 persistence=True,
+                inputCheckedClassName="border border-primary bg-primary"
             ),
         ],
         className='mb-4'

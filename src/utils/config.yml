@@ -1,6 +1,6 @@
 ---
 categorical_dropdown:
-  label: Categorical Variable
+  label: Categorical Variable  
   dropdown_list:
     - 
       label: Country
@@ -79,9 +79,13 @@ categorical_dropdown:
       value: lca_ec_reductions
   first_item: site_state_province
   dropdown_id: categorical_dropdown
+  tooltip: Categorical values are those that can take on 
+    one of a limited number of possible values. These values will 
+    become the categories plotted on the y-axis of the box plot.
+  tooltip_id: categorical_dropdown_tooltip
 
 continuous_dropdown:
-  label: Continuous Variable
+  label: Continuous Variable  
   dropdown_list:
     - 
       label: Constructed Floor Area
@@ -130,9 +134,13 @@ continuous_dropdown:
       value: lca_ec_reduction_percent
   first_item: bldg_cfa
   dropdown_id: continuous_dropdown
+  tooltip: Continuous values are those that can take on 
+    any numeric value. These values will be plotted across the 
+    x-axis of the scatter plot.
+  tooltip_id: continuous_dropdown_tooltip
 
-total_impact_dropdown: 
-  label: Impacts
+total_impact_dropdown_cat: 
+  label: Impacts  
   dropdown_list: 
     - 
       label: Embodied Carbon Intensity
@@ -159,42 +167,102 @@ total_impact_dropdown:
       label: Embodied Carbon per Residential Unit
       value: ec_per_res_unit
   first_item: eci
-  dropdown_id: total_impact_dropdown
+  dropdown_id: total_impact_dropdown_cat
+  tooltip: Each environmental metric contained in the dataset
+    is represented in this dropdown. They are either divided by
+    floor area to create "intensity" metrics, or are divided by
+    other numeric values such as occupants or residential units. 
+    These values will be plotted on the x-axis of the graph.
+  tooltip_id: total_impact_dropdown_tooltip_cat
+
+total_impact_dropdown_cont: 
+  label: Impacts  
+  dropdown_list: 
+    - 
+      label: Embodied Carbon Intensity
+      value: eci
+    -  
+      label: Eutrophication Potential Intensity
+      value: epi
+    -  
+      label: Acidification Potential Intensity
+      value: api
+    -  
+      label: Smog Formation Potential Intensity
+      value: sfpi
+    -  
+      label: Ozone Depletion Potential Intensity
+      value: odpi
+    -  
+      label: Natural Resource Depletion Intensity
+      value: nredi
+    -  
+      label: Embodied Carbon per Occupant
+      value: ec_per_occupant
+    -  
+      label: Embodied Carbon per Residential Unit
+      value: ec_per_res_unit
+  first_item: eci
+  dropdown_id: total_impact_dropdown_cont
+  tooltip: Each environmental metric contained in the dataset
+    is represented in this dropdown. They are either divided by
+    floor area to create "intensity" metrics, or are divided by
+    other numeric values such as occupants or residential units. 
+    These values will be plotted on the y-axis of the graph.
+  tooltip_id: total_impact_dropdown_tooltip_cont
 
 new_constr_toggle_cat:
   label: ""
   toggle_list:
-    - label: New construction only
+    - label: New construction only 
       value: 1
   first_item: []
   toggle_id: new_constr_toggle_cat
+  tooltip: This toggle will remove projects with
+    a project type of "Minor Renovation", "Major Renovation",
+    or "Tenant Improvement".
+  tooltip_id: new_constr_toggle_tooltip_cat
 
 new_constr_toggle_cont:
   label: ""
   toggle_list:
-    - label: New construction only
+    - label: New construction only 
       value: 1
   first_item: []
   toggle_id: new_constr_toggle_cont
+  tooltip: This toggle will remove projects with
+    a project type of "Minor Renovation", "Major Renovation",
+    or "Tenant Improvement".
+  tooltip_id: new_constr_toggle_tooltip_cont
 
 outlier_toggle_cat:
   label: ""
   toggle_list:
-    - label: Remove outliers
+    - label: Remove outliers 
       value: 1
   first_item: []
   toggle_id: outlier_toggle_cat
+  tooltip: This toggle will remove outliers from the box plot.
+    A project is considered an outlier if the selected impact
+    of the project is 3 times the interquartile range of 
+    all project impacts in the dataset.
+  tooltip_id: outlier_toggle_tooltip_cat
 
 outlier_toggle_cont:
   label: ""
   toggle_list:
-    - label: Remove outliers
+    - label: Remove outliers 
       value: 1
   first_item: []
   toggle_id: outlier_toggle_cont
+  tooltip: This toggle will remove outliers from the scatter plot.
+    A project is considered an outlier if the selected impact
+    of the project is 3 times the interquartile range of 
+    all project impacts in the dataset.
+  tooltip_id: outlier_toggle_tooltip_cont
 
 floor_area_normalization_cat:
-  label: "Normalize intensity by:"
+  label: "Normalize intensity by:  "
   radio_list:
     - label: Constructed Floor Area
       value: cfa
@@ -202,9 +270,14 @@ floor_area_normalization_cat:
       value: gfa
   first_item: cfa
   radio_id: floor_area_normal_cat
+  tooltip: "Total constructed floor area (CFA) 
+    includes the gross internal floor area (GFA) of the 
+    building and the gross floor area of any 
+    attached/integrated parking components."
+  tooltip_id: floor_area_normalization_tooltip_cat
 
 floor_area_normalization_cont:
-  label: "Normalize intensity by:"
+  label: "Normalize intensity by:  "
   radio_list:
     - label: Constructed Floor Area
       value: cfa
@@ -212,9 +285,14 @@ floor_area_normalization_cont:
       value: gfa
   first_item: cfa
   radio_id: floor_area_normal_cont
+  tooltip: "Total constructed floor area (CFA) 
+    includes the gross internal floor area (GFA) of the 
+    building and the gross floor area of any 
+    attached/integrated parking components."
+  tooltip_id: floor_area_normalization_tooltip_cont
 
 sort_box_plot_cat:
-  label: "Sort box plots by:"
+  label: "Sort box plots by:  "
   radio_list:
     - label: Median
       value: median
@@ -222,9 +300,30 @@ sort_box_plot_cat:
       value: cat_value
   first_item: median
   radio_id: sort_box_plot_cat
+  tooltip: Selecting "Median" sorts box plots from 
+    highest to lowest median values. Selecting "Categorical 
+    value" will sort the box plots in a rational
+     way based on the category (e.g. Seismic Design Category 
+     will be sorted alphabetically)
+  tooltip_id: sort_box_plot_tooltip_cat
+
+log_linear_cont:
+  label: Log-Linear  
+  radio_list:
+    - 
+      label: Linear
+      value: linear
+    - 
+      label: Logarithmic
+      label: logarithmic
+  first_item: linear
+  radio_id: log_linear_radio
+  tooltip: This selection dictates the type of x and y-axis
+    scales to be displayed by the graph.
+  tooltip_id: sort_box_plot_tooltip_cat
 
 color_dropdown:
-  label: Color
+  label: Color  
   dropdown_list:
     - label: No color
       value: No color
@@ -305,14 +404,9 @@ color_dropdown:
       value: lca_ec_reductions
   first_item: No color
   dropdown_id: color_dropdown
-
-log_linear_dropdown:
-  label: Log-Linear
-  dropdown_list:
-    - Linear
-    - Logarithmic
-  first_item: Linear
-  dropdown_id: log_linear_dropdown
+  tooltip: Each categorical variable is represented in this dropdown
+    and allows for different groupings of the continous variable.
+  tooltip_id: color_dropdown_tooltip
 
 cfa_gfa_map:
   cfa:

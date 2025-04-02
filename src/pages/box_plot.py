@@ -6,6 +6,7 @@ import dash_bootstrap_components as dbc
 from src.components.dropdowns import create_dropdown
 from src.components.toggle import create_toggle
 from src.components.radio_items import create_radio_items
+from src.components.tooltip import create_tooltip
 from src.components.datatable import create_datatable, \
     create_float_table_entry, create_string_table_entry, create_int_table_entry
 from src.utils.load_config import app_config
@@ -18,7 +19,7 @@ register_page(__name__, path='/box_plot')
 categorical_dropdown_yaml = config.get('categorical_dropdown')
 assert categorical_dropdown_yaml is not None, 'The config for cat. dropdowns could not be set'
 
-total_impact_dropdown_yaml = config.get('total_impact_dropdown')
+total_impact_dropdown_yaml = config.get('total_impact_dropdown_cat')
 assert total_impact_dropdown_yaml is not None, 'The config for total impacts could not be set'
 
 new_constr_toggle_yaml = config.get('new_constr_toggle_cat')
@@ -44,53 +45,94 @@ assert cfa_gfa_map is not None, 'The config for cfa/gfa map could not be set'
 
 categorical_dropdown = create_dropdown(
     label=categorical_dropdown_yaml['label'],
+    tooltip_id=categorical_dropdown_yaml['tooltip_id'],
     dropdown_list=categorical_dropdown_yaml['dropdown_list'],
     first_item=categorical_dropdown_yaml['first_item'],
     dropdown_id=categorical_dropdown_yaml['dropdown_id']
 )
 
+categorical_tooltip = create_tooltip(
+    tooltip_text=categorical_dropdown_yaml['tooltip'],
+    target_id=categorical_dropdown_yaml['tooltip_id']
+)
+
 total_impact_dropdown = create_dropdown(
     label=total_impact_dropdown_yaml['label'],
+    tooltip_id=total_impact_dropdown_yaml['tooltip_id'],
     dropdown_list=total_impact_dropdown_yaml['dropdown_list'],
     first_item=total_impact_dropdown_yaml['first_item'],
     dropdown_id=total_impact_dropdown_yaml['dropdown_id']
+)
+
+total_impact_tooltip = create_tooltip(
+    tooltip_text=total_impact_dropdown_yaml['tooltip'],
+    target_id=total_impact_dropdown_yaml['tooltip_id']
 )
 
 new_constr_toggle = create_toggle(
     toggle_list=new_constr_toggle_yaml['toggle_list'],
     first_item=new_constr_toggle_yaml['first_item'],
     toggle_id=new_constr_toggle_yaml['toggle_id'],
+    tooltip_id=new_constr_toggle_yaml['tooltip_id'],
+)
+
+new_constr_tooltip = create_tooltip(
+    tooltip_text=new_constr_toggle_yaml['tooltip'],
+    target_id=new_constr_toggle_yaml['tooltip_id']
 )
 
 outlier_toggle = create_toggle(
     toggle_list=outlier_toggle_yaml['toggle_list'],
     first_item=outlier_toggle_yaml['first_item'],
     toggle_id=outlier_toggle_yaml['toggle_id'],
+    tooltip_id=outlier_toggle_yaml['tooltip_id'],
 )
 
+outlier_tooltip = create_tooltip(
+    tooltip_text=outlier_toggle_yaml['tooltip'],
+    target_id=outlier_toggle_yaml['tooltip_id']
+)
 
 floor_area_radio = create_radio_items(
     label=floor_area_radio_yaml['label'],
+    tooltip_id=floor_area_radio_yaml['tooltip_id'],
     radio_list=floor_area_radio_yaml['radio_list'],
     first_item=floor_area_radio_yaml['first_item'],
     radio_id=floor_area_radio_yaml['radio_id']
 )
 
+floor_area_tooltip = create_tooltip(
+    tooltip_text=floor_area_radio_yaml['tooltip'],
+    target_id=floor_area_radio_yaml['tooltip_id']
+)
+
 sort_box_radio = create_radio_items(
     label=sort_box_radio_yaml['label'],
+    tooltip_id=sort_box_radio_yaml['tooltip_id'],
     radio_list=sort_box_radio_yaml['radio_list'],
     first_item=sort_box_radio_yaml['first_item'],
     radio_id=sort_box_radio_yaml['radio_id']
 )
 
+sort_box_tooltip = create_tooltip(
+    tooltip_text=sort_box_radio_yaml['tooltip'],
+    target_id=sort_box_radio_yaml['tooltip_id']
+)
+
 controls_cat = dbc.Card(
     [
         categorical_dropdown,
+        categorical_tooltip,
         total_impact_dropdown,
+        total_impact_tooltip,
         floor_area_radio,
+        floor_area_tooltip,
         sort_box_radio,
+        sort_box_tooltip,
         new_constr_toggle,
-        outlier_toggle
+        new_constr_tooltip,
+        outlier_toggle,
+        outlier_tooltip
     ],
     body=True,
 )
@@ -142,7 +184,7 @@ layout = html.Div(
     Output('categorical_graph', 'figure'),
     [
         Input('categorical_dropdown', 'value'),
-        Input('total_impact_dropdown', 'value'),
+        Input('total_impact_dropdown_cat', 'value'),
         Input('sort_box_plot_cat', 'value'),
         Input('floor_area_normal_cat', 'value'),
         Input('new_constr_toggle_cat', 'value'),
@@ -258,7 +300,7 @@ def update_chart(category_x,
     ],
     [
         Input('categorical_dropdown', 'value'),
-        Input('total_impact_dropdown', 'value'),
+        Input('total_impact_dropdown_cat', 'value'),
         Input('floor_area_normal_cat', 'value'),
         Input('new_constr_toggle_cat', 'value'),
         Input('outlier_toggle_cat', 'value'),
@@ -363,7 +405,7 @@ def update_table(cat_value,
         Input("btn-download-tbl-box", "n_clicks"),
         State('floor_area_normal_cat', 'value'),
         State('categorical_dropdown', 'value'),
-        State('total_impact_dropdown', 'value'),
+        State('total_impact_dropdown_cat', 'value'),
         State('new_constr_toggle_cat', 'value'),
         State('outlier_toggle_cat', 'value'),
         State('buildings_metadata', 'data')

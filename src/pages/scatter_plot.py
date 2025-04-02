@@ -6,6 +6,7 @@ import pandas as pd
 from src.components.dropdowns import create_dropdown
 from src.components.toggle import create_toggle
 from src.components.radio_items import create_radio_items
+from src.components.tooltip import create_tooltip
 from src.components.datatable import create_datatable, create_float_table_entry, \
     create_string_table_entry
 from src.utils.load_config import app_config
@@ -18,7 +19,7 @@ config = app_config
 continuous_dropdown_yaml = config.get('continuous_dropdown')
 assert continuous_dropdown_yaml is not None, 'The config for cont. dropdowns could not be set'
 
-total_impact_dropdown_yaml = config.get('total_impact_dropdown')
+total_impact_dropdown_yaml = config.get('total_impact_dropdown_cont')
 assert total_impact_dropdown_yaml is not None, 'The config for total impacts could not be set'
 
 color_dropdown_yaml = config.get('color_dropdown')
@@ -33,8 +34,8 @@ assert outlier_toggle_yaml is not None, 'The config for new construction could n
 floor_area_radio_yaml = config.get('floor_area_normalization_cont')
 assert floor_area_radio_yaml is not None, 'The config for floor area norm. could not be set'
 
-log_linear_dropdown_yaml = config.get('log_linear_dropdown')
-assert log_linear_dropdown_yaml is not None, 'The config for log-linear could not be set'
+log_linear_radio_yaml = config.get('log_linear_cont')
+assert log_linear_radio_yaml is not None, 'The config for log-linear could not be set'
 
 field_name_map = config.get('field_name_map')
 assert field_name_map is not None, 'The config for field names could not be set'
@@ -44,69 +45,109 @@ assert cfa_gfa_map is not None, 'The config for cfa/gfa map could not be set'
 
 continuous_dropdown = create_dropdown(
     label=continuous_dropdown_yaml['label'],
+    tooltip_id=continuous_dropdown_yaml['tooltip_id'],
     dropdown_list=continuous_dropdown_yaml['dropdown_list'],
     first_item=continuous_dropdown_yaml['first_item'],
     dropdown_id=continuous_dropdown_yaml['dropdown_id']
 )
 
+continuous_tooltip = create_tooltip(
+    tooltip_text=continuous_dropdown_yaml['tooltip'],
+    target_id=continuous_dropdown_yaml['tooltip_id']
+)
+
 total_impact_dropdown = create_dropdown(
     label=total_impact_dropdown_yaml['label'],
+    tooltip_id=total_impact_dropdown_yaml['tooltip_id'],
     dropdown_list=total_impact_dropdown_yaml['dropdown_list'],
     first_item=total_impact_dropdown_yaml['first_item'],
     dropdown_id=total_impact_dropdown_yaml['dropdown_id']
 )
 
+total_impact_tooltip = create_tooltip(
+    tooltip_text=total_impact_dropdown_yaml['tooltip'],
+    target_id=total_impact_dropdown_yaml['tooltip_id']
+)
+
 color_dropdown = create_dropdown(
     label=color_dropdown_yaml['label'],
+    tooltip_id=color_dropdown_yaml['tooltip_id'],
     dropdown_list=color_dropdown_yaml['dropdown_list'],
     first_item=color_dropdown_yaml['first_item'],
     dropdown_id=color_dropdown_yaml['dropdown_id']
+)
+
+color_tooltip = create_tooltip(
+    tooltip_text=color_dropdown_yaml['tooltip'],
+    target_id=color_dropdown_yaml['tooltip_id']
 )
 
 new_constr_toggle = create_toggle(
     toggle_list=new_constr_toggle_yaml['toggle_list'],
     first_item=new_constr_toggle_yaml['first_item'],
     toggle_id=new_constr_toggle_yaml['toggle_id'],
+    tooltip_id=new_constr_toggle_yaml['tooltip_id'],
+)
+
+new_constr_tooltip = create_tooltip(
+    tooltip_text=new_constr_toggle_yaml['tooltip'],
+    target_id=new_constr_toggle_yaml['tooltip_id']
 )
 
 outlier_toggle = create_toggle(
     toggle_list=outlier_toggle_yaml['toggle_list'],
     first_item=outlier_toggle_yaml['first_item'],
     toggle_id=outlier_toggle_yaml['toggle_id'],
+    tooltip_id=outlier_toggle_yaml['tooltip_id'],
+)
+
+outlier_tooltip = create_tooltip(
+    tooltip_text=outlier_toggle_yaml['tooltip'],
+    target_id=outlier_toggle_yaml['tooltip_id']
 )
 
 floor_area_radio = create_radio_items(
     label=floor_area_radio_yaml['label'],
+    tooltip_id=floor_area_radio_yaml['tooltip_id'],
     radio_list=floor_area_radio_yaml['radio_list'],
     first_item=floor_area_radio_yaml['first_item'],
     radio_id=floor_area_radio_yaml['radio_id']
 )
 
-log_linear_radio = html.Div(
-    [
-        dbc.Label(log_linear_dropdown_yaml['label']),
-        dbc.RadioItems(
-            options=[
-                {"label": "Linear", "value": 'linear'},
-                {"label": "Logarithmic", "value": 'Logarithmic'},
-            ],
-            value='linear',
-            id="log_linear_radio",
-            inputCheckedClassName="border border-primary bg-primary"
-        ),
-    ],
-    className='mb-4'
+floor_area_tooltip = create_tooltip(
+    tooltip_text=floor_area_radio_yaml['tooltip'],
+    target_id=floor_area_radio_yaml['tooltip_id']
+)
+
+log_linear_radio = create_radio_items(
+    label=log_linear_radio_yaml['label'],
+    tooltip_id=log_linear_radio_yaml['tooltip_id'],
+    radio_list=log_linear_radio_yaml['radio_list'],
+    first_item=log_linear_radio_yaml['first_item'],
+    radio_id=log_linear_radio_yaml['radio_id']
+)
+
+log_linear_tooltip = create_tooltip(
+    tooltip_text=log_linear_radio_yaml['tooltip'],
+    target_id=log_linear_radio_yaml['tooltip_id']
 )
 
 controls_cont = dbc.Card(
     [
         continuous_dropdown,
+        continuous_tooltip,
         total_impact_dropdown,
+        total_impact_tooltip,
         color_dropdown,
+        color_tooltip,
         floor_area_radio,
+        floor_area_tooltip,
         log_linear_radio,
+        log_linear_tooltip,
         new_constr_toggle,
-        outlier_toggle
+        new_constr_tooltip,
+        outlier_toggle,
+        outlier_tooltip
     ],
     body=True,
 )
@@ -158,7 +199,7 @@ layout = html.Div(
     Output('continuous_graph', 'figure'),
     [
         Input('continuous_dropdown', 'value'),
-        Input('total_impact_dropdown', 'value'),
+        Input('total_impact_dropdown_cont', 'value'),
         Input('color_dropdown', 'value'),
         Input('log_linear_radio', 'value'),
         Input('floor_area_normal_cont', 'value'),
@@ -280,7 +321,7 @@ def update_chart(cont_x,
     ],
     [
         Input('continuous_dropdown', 'value'),
-        Input('total_impact_dropdown', 'value'),
+        Input('total_impact_dropdown_cont', 'value'),
         Input('color_dropdown', 'value'),
         Input('floor_area_normal_cont', 'value'),
         Input('new_constr_toggle_cont', 'value'),
@@ -360,7 +401,7 @@ def update_table(cont_value,
     Output("download-tbl-scatter", "data"),
     [
         State('continuous_dropdown', 'value'),
-        State('total_impact_dropdown', 'value'),
+        State('total_impact_dropdown_cont', 'value'),
         Input("btn-download-tbl-scatter", "n_clicks"),
         State('buildings_metadata', 'data'),
         State('color_dropdown', 'value'),

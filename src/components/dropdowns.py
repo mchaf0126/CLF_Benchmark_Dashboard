@@ -2,7 +2,7 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 
-def create_dropdown(label: str, dropdown_list: list, first_item: str, dropdown_id: str) -> html.Div:
+def create_dropdown(label: str, tooltip_id: str, dropdown_list: list, first_item: str, dropdown_id: str) -> html.Div:
     """_summary_
 
     Args:
@@ -17,7 +17,15 @@ def create_dropdown(label: str, dropdown_list: list, first_item: str, dropdown_i
 
     dropdown = html.Div(
         [
-            dbc.Label(label),
+            dbc.Label(
+                [
+                    label,
+                    html.Span(
+                        ' 🛈',
+                        id=tooltip_id
+                    )
+                ]
+            ),
             dcc.Dropdown(
                 options=dropdown_list,
                 value=first_item,
